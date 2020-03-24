@@ -202,6 +202,27 @@ export const copyHeadlineTransformer: BaPageTransformer = async source => {
   return transformed;
 };
 
+export const internalLinksToRouterLinksTransformer: BaPageTransformer = async source => {
+  const transformed = { ...source };
+  if (source.content && source.content.length) {
+    transformed.content = runWithCheerio(source.content, $ => {
+      const links = $('a');
+      if (links.length) {
+        links.each((_, link) => {
+          const linkValue = $(link).attr('href');
+          if (linkValue && !linkValue.includes('http')) {
+            const updatedLink = $(link);
+            updatedLink.removeAttr('href');
+            updatedLink.attr('routerLink', linkValue);
+            $(link.attribs).append(updatedLink);
+          }
+        });
+      }
+    });
+  }
+  return transformed;
+};
+
 /** Removes internal links from the content on public build. */
 export function internalLinksTransformerFactory(
   isPublic: boolean,

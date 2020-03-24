@@ -21,6 +21,7 @@ import {
   internalLinksTransformerFactory,
   headingIdTransformer,
   internalContentTransformerFactory,
+  internalLinksToRouterLinksTransformer,
 } from './transform';
 
 describe('Barista transformers', () => {
@@ -184,6 +185,40 @@ describe('Barista transformers', () => {
       expect(transformed.content).toBe(
         '<h1>Fonts</h1>\n\n<p>\n\nThis is just a simple internal string\n\n</p>\n\n<p>Some more public content.</p>',
       );
+    });
+  });
+
+  // tslint:disable-next-line: dt-no-focused-tests
+  describe('internalLinkReplacer', () => {
+    it('should replace internal links to routerLinks', async () => {
+      const content = `<div class="hello">
+        <p>Lorem Ipsum did something wonderful. A piece of paper vanished. Pens destroyed. Now he has time to spend on me</p>
+        <a href="http://www.dynatrace.com">Dynatrace</a>
+        <a href="/resources/bundle">Bundle</a>
+        <a href="http://www.google.at">Google</a>
+        <a href="/components/expandable-text">Expandable-Text</a>
+        <a href="/guidelines/commits">Commits</a>
+        <a href="http://www.facebook.at">Facebook</a>
+        <a href="http://resources/guides">Guides</a>
+      </div>
+      `;
+      const transformed = await internalLinksToRouterLinksTransformer({
+        title: 'Links',
+        layout: BaPageLayoutType.Default,
+        content,
+      });
+      // console.log(transformContent)
+      expect(transformed.content).toBe(`<div class="hello">
+        <p>Lorem Ipsum did something wonderful. A piece of paper vanished. Pens destroyed. Now he has time to spend on me</p>
+        <a href="http://www.dynatrace.com">Dynatrace</a>
+        <a routerLink="/resources/bundle">Bundle</a>
+        <a href="http://www.google.at">Google</a>
+        <a routerLink="/components/expandable-text">Expandable-Text</a>
+        <a routerLink="/guidelines/commits">Commits</a>
+        <a href="http://www.facebook.at">Facebook</a>
+        <a href="http://resources/guides">Guides</a>
+      </div>
+      `);
     });
   });
 });
