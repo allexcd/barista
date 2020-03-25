@@ -200,6 +200,10 @@ describe('Barista transformers', () => {
         <a href="/guidelines/commits">Commits</a>
         <a href="http://www.facebook.at">Facebook</a>
         <a href="http://resources/guides">Guides</a>
+        <a href="//resource/guides>Resource</a>
+        <a href="ftp://resource/guides>Resource</a>
+        <a href="/guidelines">guide</a>
+        <a href="https://www.some.site">some</a>
       </div>
       `;
       const transformed = await internalLinksToRouterLinksTransformer({
@@ -207,7 +211,6 @@ describe('Barista transformers', () => {
         layout: BaPageLayoutType.Default,
         content,
       });
-      // console.log(transformContent)
       expect(transformed.content).toBe(`<div class="hello">
         <p>Lorem Ipsum did something wonderful. A piece of paper vanished. Pens destroyed. Now he has time to spend on me</p>
         <a href="http://www.dynatrace.com">Dynatrace</a>
@@ -217,6 +220,10 @@ describe('Barista transformers', () => {
         <a routerLink="/guidelines/commits">Commits</a>
         <a href="http://www.facebook.at">Facebook</a>
         <a href="http://resources/guides">Guides</a>
+        <a href="//resource/guides>Resource</a>
+        <a href="ftp://resource/guides>Resource</a>
+        <a routerLink="/guidelines">guide</a>
+        <a href="https://www.some.site">some</a>
       </div>
       `);
     });

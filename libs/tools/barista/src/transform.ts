@@ -213,12 +213,14 @@ export const internalLinksToRouterLinksTransformer: BaPageTransformer = async so
           const linkValue = $(link).attr('href');
           if (
             linkValue &&
-            (!linkValue.startsWith('http') || !linkValue.includes('//:'))
+            // TODO: Regex
+            (linkValue.match() || !linkValue.includes('//'))
           ) {
-            const updatedLink = $(link);
-            updatedLink.removeAttr('href');
-            updatedLink.attr('routerLink', linkValue);
-            $(link.attribs).append(updatedLink);
+            $(link.attribs).append(
+              $(link)
+                .removeAttr('href')
+                .attr('routerLink', linkValue),
+            );
           }
         });
       }
