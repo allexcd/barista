@@ -202,6 +202,7 @@ export const copyHeadlineTransformer: BaPageTransformer = async source => {
   return transformed;
 };
 
+/** Replaces internal href links with routerLink links */
 export const internalLinksToRouterLinksTransformer: BaPageTransformer = async source => {
   const transformed = { ...source };
   if (source.content && source.content.length) {
@@ -210,7 +211,10 @@ export const internalLinksToRouterLinksTransformer: BaPageTransformer = async so
       if (links.length) {
         links.each((_, link) => {
           const linkValue = $(link).attr('href');
-          if (linkValue && !linkValue.includes('http')) {
+          if (
+            linkValue &&
+            (!linkValue.startsWith('http') || !linkValue.includes('//:'))
+          ) {
             const updatedLink = $(link);
             updatedLink.removeAttr('href');
             updatedLink.attr('routerLink', linkValue);
