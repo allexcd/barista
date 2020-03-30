@@ -15,6 +15,7 @@
  */
 
 import { BaPageLayoutType } from '@dynatrace/shared/barista-definitions';
+
 import {
   componentTagsTransformer,
   extractH1ToTitleTransformer,
@@ -191,41 +192,31 @@ describe('Barista transformers', () => {
   // tslint:disable-next-line: dt-no-focused-tests
   describe('internalLinkReplacer', () => {
     it('should replace internal links to routerLinks', async () => {
-      const content = `<div class="hello">
-        <p>Lorem Ipsum did something wonderful. A piece of paper vanished. Pens destroyed. Now he has time to spend on me</p>
-        <a href="http://www.dynatrace.com">Dynatrace</a>
+      const content = `<a href="http://www.dynatrace.com">Dynatrace</a>
+        <a href="ftpt://resource/guides">Resource</a>
+        <a href="smtp://resource/guides">Resource</a>
+        <a href="smthn://resource/guides">Resource</a>
+        <a href="lorem://resource/guides">Resource</a>
+        <a href="resources/bundle">Bundle</a>
         <a href="/resources/bundle">Bundle</a>
-        <a href="http://www.google.at">Google</a>
-        <a href="/components/expandable-text">Expandable-Text</a>
-        <a href="/guidelines/commits">Commits</a>
-        <a href="http://www.facebook.at">Facebook</a>
-        <a href="http://resources/guides">Guides</a>
-        <a href="//resource/guides>Resource</a>
-        <a href="ftp://resource/guides>Resource</a>
-        <a href="/guidelines">guide</a>
-        <a href="https://www.some.site">some</a>
-      </div>
+        <a href="//resource/guides">Resource</a>
       `;
       const transformed = await internalLinksToRouterLinksTransformer({
         title: 'Links',
         layout: BaPageLayoutType.Default,
         content,
       });
-      expect(transformed.content).toBe(`<div class="hello">
-        <p>Lorem Ipsum did something wonderful. A piece of paper vanished. Pens destroyed. Now he has time to spend on me</p>
-        <a href="http://www.dynatrace.com">Dynatrace</a>
+      expect(transformed.content).toBe(
+        `<a href="http://www.dynatrace.com">Dynatrace</a>
+        <a href="ftpt://resource/guides">Resource</a>
+        <a href="smtp://resource/guides">Resource</a>
+        <a href="smthn://resource/guides">Resource</a>
+        <a href="lorem://resource/guides">Resource</a>
+        <a href="resources/bundle">Bundle</a>
         <a routerLink="/resources/bundle">Bundle</a>
-        <a href="http://www.google.at">Google</a>
-        <a routerLink="/components/expandable-text">Expandable-Text</a>
-        <a routerLink="/guidelines/commits">Commits</a>
-        <a href="http://www.facebook.at">Facebook</a>
-        <a href="http://resources/guides">Guides</a>
-        <a href="//resource/guides>Resource</a>
-        <a href="ftp://resource/guides>Resource</a>
-        <a routerLink="/guidelines">guide</a>
-        <a href="https://www.some.site">some</a>
-      </div>
-      `);
+        <a routerLink="//resource/guides">Resource</a>
+      `,
+      );
     });
   });
 });

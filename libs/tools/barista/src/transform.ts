@@ -211,11 +211,7 @@ export const internalLinksToRouterLinksTransformer: BaPageTransformer = async so
       if (links.length) {
         links.each((_, link) => {
           const linkValue = $(link).attr('href');
-          if (
-            linkValue &&
-            // TODO: Regex
-            (linkValue.match() || !linkValue.includes('//'))
-          ) {
+          if (linkValue && checkInternalLink($, link)) {
             $(link.attribs).append(
               $(link)
                 .removeAttr('href')
@@ -326,4 +322,17 @@ export function internalContentTransformerFactory(
 
     return transformed;
   };
+}
+
+// Matches links to check if link is an internallink
+function checkInternalLink($: CheerioStatic, link: CheerioElement): boolean {
+  if (
+    $(link).attr('href') &&
+    !$(link)
+      .attr('href')!
+      .match(/^(?!\/\/)$^\/[a-z]|^[a-z]/g)
+  ) {
+    return true;
+  }
+  return false;
 }
