@@ -24,7 +24,9 @@ export function runWithCheerio(
   content: string,
   transformFunction: ($: CheerioStatic) => void,
 ): string {
-  const $ = loadWithCheerio(content);
+  // https://github.com/cheeriojs/cheerio/issues/720
+  // Appending a string with quotes or single quotes as an attribute replaces the quotes with encodedEntities.
+  const $ = loadWithCheerio(content, { decodeEntities: false });
   transformFunction($);
   return $('body').html() || '';
 }

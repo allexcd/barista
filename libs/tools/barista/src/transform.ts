@@ -31,6 +31,7 @@ import {
   BaStrapiSnippet,
   BaPageTransformer,
 } from './types';
+import * as url from 'url';
 
 const markdown = new markdownIt({
   html: true,
@@ -211,12 +212,30 @@ export const relativeUrlTransformer: BaPageTransformer = async source => {
       if (links.length) {
         links.each((_, link) => {
           const linkValue = $(link).attr('href');
-          if (linkValue && isInternalLink(linkValue)) {
-            $(link.attribs).append(
-              $(link)
-                .removeAttr('href')
-                .attr('routerLink', linkValue),
-            );
+          if (linkValue && isRelativeUrl(linkValue)) {
+            let u = url.parse(linkValue);
+            if (u.pathname === null) {
+              $(link.attribs).append(
+                $(link)
+                  .removeAttr('href')
+                  .attr('[routerLink]', `['/']`),
+              );
+            } else {
+              $(link.attribs).append(
+                $(link)
+                  .removeAttr('href')
+                  .attr('[routerLink]', `['${u.pathname}']`),
+              );
+            }
+            if (u.hash) {
+              $(link.attribs).append(
+                $(link).attr('fragments', u.hash.replace('#', '')),
+              );
+            }
+            if (u.query) {
+              const query = toQueryParamValue(u.query);
+              $(link.attribs).append($(link).attr('[queryParams]', query));
+            }
           }
         });
       }
@@ -324,7 +343,16 @@ export function internalContentTransformerFactory(
   };
 }
 
-// Matches links to check if link is an internallink
-function isInternalLink(href: string): boolean {
+// Checks whether a URL is relative
+function isRelativeUrl(href: string): boolean {
   return !href.match(/^(?:[a-z]+:)?\/\//i);
+}
+
+function toQueryParamValue(query: string): string {
+  const params = new URLSearchParams(query);
+  const queryParams: string[] = [];
+  params.forEach((v, k) => {
+    queryParams.push(`'${k}': '${v}'`);
+  });
+  return `{${queryParams.join(',')}}`;
 }

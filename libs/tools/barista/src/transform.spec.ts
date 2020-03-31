@@ -126,8 +126,8 @@ describe('Barista transformers', () => {
         content,
       });
       expect(transformed.content).toBe(
-        '<h2 id="what-s-new">What&apos;s new?</h2>' +
-          '<h3 id="coffee-tea">Coffee &amp; tea</h3>' +
+        '<h2 id="what-s-new">What\'s new?</h2>' +
+          '<h3 id="coffee-tea">Coffee & tea</h3>' +
           '<h3 id="awesome">Awesome!</h3>',
       );
     });
@@ -193,13 +193,19 @@ describe('Barista transformers', () => {
   describe('internalLinkReplacer', () => {
     it('should replace internal links to routerLinks', async () => {
       const content = `<a href="http://www.dynatrace.com">Dynatrace</a>
-        <a href="ftpt://resource/guides">Resource</a>
-        <a href="smtp://resource/guides">Resource</a>
-        <a href="smthn://resource/guides">Resource</a>
-        <a href="lorem://resource/guides">Resource</a>
-        <a href="resources/bundle">Bundle</a>
-        <a href="/resources/bundle">Bundle</a>
-        <a href="//resource/guides">Resource</a>
+        <a href="ftpt://resources/guides">Resource</a>
+        <a href="smtp://resources/guides">Resource</a>
+        <a href="smthn://resources/guides">Resource</a>
+        <a href="lorem://resources/guides">Resource</a>
+        <a href="//resources/guides">Resource</a>
+        <a href="resources/guides">Resource</a>
+        <a href="/resources/bundle">Resource</a>
+        <a href="/brand/guides#headline1">Resource</a>
+        <a href="#headline1">Resource</a>
+        <a href="/patterns/button-alignment?sort=ASC">Resource</a>
+        <a href="/patterns/button-alignment?sort-order=ASC">Resource</a>
+        <a href="/components/button?sort=ASC#headline1">Resource</a>
+        <a href="/patterns/button-alignment?sort=ASC&id=2">Resource</a>
       `;
       const transformed = await relativeUrlTransformer({
         title: 'Links',
@@ -208,13 +214,19 @@ describe('Barista transformers', () => {
       });
       expect(transformed.content).toBe(
         `<a href="http://www.dynatrace.com">Dynatrace</a>
-        <a href="ftpt://resource/guides">Resource</a>
-        <a href="smtp://resource/guides">Resource</a>
-        <a href="smthn://resource/guides">Resource</a>
-        <a href="lorem://resource/guides">Resource</a>
-        <a routerLink="resources/bundle">Bundle</a>
-        <a routerLink="/resources/bundle">Bundle</a>
-        <a href="//resource/guides">Resource</a>
+        <a href="ftpt://resources/guides">Resource</a>
+        <a href="smtp://resources/guides">Resource</a>
+        <a href="smthn://resources/guides">Resource</a>
+        <a href="lorem://resources/guides">Resource</a>
+        <a href="//resources/guides">Resource</a>
+        <a [routerLink]="['resources/guides']">Resource</a>
+        <a [routerLink]="['/resources/bundle']">Resource</a>
+        <a [routerLink]="['/brand/guides']" fragments="headline1">Resource</a>
+        <a [routerLink]="['/']" fragments="headline1">Resource</a>
+        <a [routerLink]="['/patterns/button-alignment']" [queryParams]="{'sort': 'ASC'}">Resource</a>
+        <a [routerLink]="['/patterns/button-alignment']" [queryParams]="{'sort-order': 'ASC'}">Resource</a>
+        <a [routerLink]="['/components/button']" fragments="headline1" [queryParams]="{'sort': 'ASC'}">Resource</a>
+        <a [routerLink]="['/patterns/button-alignment']" [queryParams]="{'sort': 'ASC','id': '2'}">Resource</a>
       `,
       );
     });
