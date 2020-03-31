@@ -326,5 +326,5 @@ export function internalContentTransformerFactory(
 
 // Matches links to check if link is an internallink
 function isInternalLink(href: string): boolean {
-  return !href.match(/^(?!\/\/)$^\/[a-z]|^[a-z]/g);
+  return !href.match(/^(?:[a-z]+:)?\/\//i);
 }

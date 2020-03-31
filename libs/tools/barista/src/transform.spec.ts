@@ -212,9 +212,9 @@ describe('Barista transformers', () => {
         <a href="smtp://resource/guides">Resource</a>
         <a href="smthn://resource/guides">Resource</a>
         <a href="lorem://resource/guides">Resource</a>
-        <a href="resources/bundle">Bundle</a>
+        <a routerLink="resources/bundle">Bundle</a>
         <a routerLink="/resources/bundle">Bundle</a>
-        <a routerLink="//resource/guides">Resource</a>
+        <a href="//resource/guides">Resource</a>
       `,
       );
     });
