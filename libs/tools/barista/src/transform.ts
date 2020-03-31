@@ -203,7 +203,7 @@ export const copyHeadlineTransformer: BaPageTransformer = async source => {
 };
 
 /** Replaces internal href links with routerLink links */
-export const internalLinksToRouterLinksTransformer: BaPageTransformer = async source => {
+export const relativeUrlTransformer: BaPageTransformer = async source => {
   const transformed = { ...source };
   if (source.content && source.content.length) {
     transformed.content = runWithCheerio(source.content, $ => {

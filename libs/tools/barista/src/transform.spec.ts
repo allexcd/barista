@@ -22,7 +22,7 @@ import {
   internalLinksTransformerFactory,
   headingIdTransformer,
   internalContentTransformerFactory,
-  internalLinksToRouterLinksTransformer,
+  relativeUrlTransformer,
 } from './transform';
 
 describe('Barista transformers', () => {
@@ -201,7 +201,7 @@ describe('Barista transformers', () => {
         <a href="/resources/bundle">Bundle</a>
         <a href="//resource/guides">Resource</a>
       `;
-      const transformed = await internalLinksToRouterLinksTransformer({
+      const transformed = await relativeUrlTransformer({
         title: 'Links',
         layout: BaPageLayoutType.Default,
         content,
