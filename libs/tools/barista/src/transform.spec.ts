@@ -189,7 +189,6 @@ describe('Barista transformers', () => {
     });
   });
 
-  // tslint:disable-next-line: dt-no-focused-tests
   describe('internalLinkReplacer', () => {
     it('should replace internal links to routerLinks', async () => {
       const content = `<a href="http://www.dynatrace.com">Dynatrace</a>
@@ -202,6 +201,7 @@ describe('Barista transformers', () => {
         <a href="/resources/bundle">Resource</a>
         <a href="/brand/guides#headline1">Resource</a>
         <a href="#headline1">Resource</a>
+        <a href="#submitting-a-pull-request">submit a pull request</a>
         <a href="/patterns/button-alignment?sort=ASC">Resource</a>
         <a href="/patterns/button-alignment?sort-order=ASC">Resource</a>
         <a href="/components/button?sort=ASC#headline1">Resource</a>
@@ -223,6 +223,7 @@ describe('Barista transformers', () => {
         <a [routerLink]="['/resources/bundle']">Resource</a>
         <a [routerLink]="['/brand/guides']" fragments="headline1">Resource</a>
         <a [routerLink]="['/']" fragments="headline1">Resource</a>
+        <a [routerLink]="['/']" fragments="submitting-a-pull-request">submit a pull request</a>
         <a [routerLink]="['/patterns/button-alignment']" [queryParams]="{'sort': 'ASC'}">Resource</a>
         <a [routerLink]="['/patterns/button-alignment']" [queryParams]="{'sort-order': 'ASC'}">Resource</a>
         <a [routerLink]="['/components/button']" fragments="headline1" [queryParams]="{'sort': 'ASC'}">Resource</a>

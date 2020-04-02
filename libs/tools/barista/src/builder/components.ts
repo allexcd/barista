@@ -47,11 +47,11 @@ const DOCUMENTATION_ROOT = join(PROJECT_ROOT, 'documentation');
 const TRANSFORMERS: BaPageTransformer[] = [
   componentTagsTransformer,
   markdownToHtmlTransformer,
+  relativeUrlTransformer,
   extractH1ToTitleTransformer,
   uxSnippetTransformer,
   headingIdTransformer,
   copyHeadlineTransformer,
-  relativeUrlTransformer,
 ];
 
 /** Creates snippets in Strapi that do not exist already. */

@@ -25,13 +25,13 @@ import { isPublicBuild } from '@dynatrace/tools/shared';
 import { baElementBlockIgnore } from './markdown-custom-elements-ignore';
 import { fetchContentList } from './utils/fetch-strapi-content';
 import { runWithCheerio } from './utils/run-with-cheerio';
+import { parse } from 'url';
 
 import {
   BaStrapiContentType,
   BaStrapiSnippet,
   BaPageTransformer,
 } from './types';
-import * as url from 'url';
 
 const markdown = new markdownIt({
   html: true,
@@ -213,7 +213,7 @@ export const relativeUrlTransformer: BaPageTransformer = async source => {
         links.each((_, link) => {
           const linkValue = $(link).attr('href');
           if (linkValue && isRelativeUrl(linkValue)) {
-            let u = url.parse(linkValue);
+            let u = parse(linkValue);
             if (u.pathname === null) {
               $(link.attribs).append(
                 $(link)
@@ -343,16 +343,19 @@ export function internalContentTransformerFactory(
   };
 }
 
-// Checks whether a URL is relative
+/** Checks whether a URL is relative  */
 function isRelativeUrl(href: string): boolean {
+  // Matches every character case insensitive until a double point is coming. Has to have at least one character.
+  // https://regex101.com/r/nzwuR4/1
   return !href.match(/^(?:[a-z]+:)?\/\//i);
 }
 
+/** Converts query parameters to a json object */
 function toQueryParamValue(query: string): string {
   const params = new URLSearchParams(query);
   const queryParams: string[] = [];
-  params.forEach((v, k) => {
-    queryParams.push(`'${k}': '${v}'`);
+  params.forEach((value, key) => {
+    queryParams.push(`'${key}': '${value}'`);
   });
   return `{${queryParams.join(',')}}`;
 }
