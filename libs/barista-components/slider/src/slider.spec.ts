@@ -61,7 +61,7 @@ describe('DtSlider', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [DtSliderModule],
-      declarations: [TestApp, TestBigApp],
+      declarations: [TestApp, TestBigApp, TestDefaultSliderApp],
       providers: [],
     });
 
@@ -502,6 +502,7 @@ describe('DtSlider', () => {
 
       expect(sliderWrapper.classList.contains('dt-disabled')).toBe(true);
       expect(sliderWrapper.getAttribute('aria-disabled')).toBe('true');
+      expect(sliderWrapper.getAttribute('tabindex')).toBe('-1');
       expect(update).not.toHaveBeenCalled();
       expect(testComponent.slider.value).toBe(1);
       expect(inputField.value).toBe('1');
@@ -650,6 +651,7 @@ describe('DtSlider', () => {
         sliderThumb,
         sliderFill,
         sliderBackground,
+        sliderWrapper,
       } = getElements(fixture);
 
       expect(testComponent).toBeTruthy();
@@ -658,7 +660,10 @@ describe('DtSlider', () => {
       expect(testComponent.slider.max).toBe(10);
       expect(testComponent.slider.step).toBe(1);
       expect(testComponent.slider.disabled).toBe(false);
-
+      expect(sliderWrapper.classList).not.toContain('dt-disabled');
+      expect(sliderWrapper.getAttribute('aria-disabled')).toBe('false');
+      expect(sliderWrapper.getAttribute('tabindex')).toBe('0');
+      expect(inputField.getAttribute('disabled')).toBe(null);
       expect(inputField.value).toBe('0');
       expect(sliderThumb.style.transform).toBe('translateX(-100%)');
       expect(sliderFill.style.transform).toBe('scale3d(0, 1, 1)');
@@ -698,7 +703,7 @@ class TestBigApp {
 @Component({
   selector: 'dt-default-test-app',
   template: `
-    <dt-slider />
+    <dt-slider></dt-slider>
   `,
 })
 class TestDefaultSliderApp {
