@@ -1,10 +1,10 @@
 {
   "title": "Slider",
-  "description": "Component that mimics the behavior of a html range node.",
+  "description": "The slider component can be used to input numeric values in a user friendly, accessible manner.",
   "postid": "slider",
   "identifier": "Sl",
   "category": "components",
-  "public": false,
+  "public": true,
   "contributors": {
     "dev": [
       {

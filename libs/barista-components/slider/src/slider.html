@@ -4,7 +4,7 @@
 <div class="dt-slider-flex-container">
   <div
     #trackWrapper
-    tabindex="0"
+    tabindex="{{disabled ? -1 : 0}}"
     class="dt-slider-wrapper"
     [class.dt-disabled]="disabled"
     [attr.aria-valuenow]="value"

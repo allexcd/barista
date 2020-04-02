@@ -17,10 +17,21 @@
 // tslint:disable no-lifecycle-call no-use-before-declare no-magic-numbers
 // tslint:disable no-any max-file-line-count no-unbound-method use-component-selector
 
-import { waitForAngular } from '../../utils';
+import { waitForAngular, resetWindowSizeToDefault } from '../../utils';
+import { Selector } from 'testcafe';
+
+const sliderContainer = Selector('.dt-slider-flex-container');
 
 fixture('Slider')
   .page('http://localhost:4200/slider')
-  .beforeEach(async () => waitForAngular());
+  .beforeEach(async () => {
+    await resetWindowSizeToDefault();
+    await waitForAngular();
+  });
 
-test('', async () => {});
+// TODO: implement proper tests here, this is just a dummy test to show e2e test works
+test('slider', async (testController: TestController) => {
+  await testController
+    .expect(await sliderContainer.getAttribute('class'))
+    .contains('dt-slider-flex-container');
+});

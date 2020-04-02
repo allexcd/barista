@@ -365,6 +365,75 @@ describe('DtSlider', () => {
       expect(sliderBackground.style.transform).toBe('scale3d(0, 1, 1)');
     });
 
+    it('should update value if new min is set that is bigger than value', () => {
+      const {
+        inputField,
+        sliderThumb,
+        sliderFill,
+        sliderBackground,
+      } = getElements(fixture);
+
+      testComponent.slider.min = 5;
+
+      // value is 5 slider is at min position
+      expect(testComponent.slider.value).toBe(5);
+      expect(inputField.value).toBe('5');
+      expect(sliderThumb.style.transform).toBe('translateX(-100%)');
+      expect(sliderFill.style.transform).toBe('scale3d(0, 1, 1)');
+      expect(sliderBackground.style.transform).toBe('scale3d(1, 1, 1)');
+    });
+
+    it('should update value if new max is set that is smaller than value', () => {
+      const {
+        inputField,
+        sliderThumb,
+        sliderFill,
+        sliderBackground,
+      } = getElements(fixture);
+
+      testComponent.slider.value = 9;
+      testComponent.slider.max = 5;
+
+      // value is 5 slider is at max position
+      expect(testComponent.slider.value).toBe(5);
+      expect(inputField.value).toBe('5');
+      expect(sliderThumb.style.transform).toBe('translateX(-0%)');
+      expect(sliderFill.style.transform).toBe('scale3d(1, 1, 1)');
+      expect(sliderBackground.style.transform).toBe('scale3d(0, 1, 1)');
+    });
+
+    it('should update slider position if new max or min is given', () => {
+      const {
+        inputField,
+        sliderThumb,
+        sliderFill,
+        sliderBackground,
+      } = getElements(fixture);
+
+      testComponent.slider.value = 6;
+      testComponent.slider.min = 2;
+
+      expect(testComponent.slider.value).toBe(6);
+      expect(inputField.value).toBe('6');
+      expect(sliderThumb.style.transform).toBe('translateX(-50%)');
+      expect(sliderFill.style.transform).toBe('scale3d(0.5, 1, 1)');
+      expect(sliderBackground.style.transform).toBe('scale3d(0.5, 1, 1)');
+
+      testComponent.slider.max = 9;
+
+      expect(testComponent.slider.value).toBe(6);
+      expect(inputField.value).toBe('6');
+      expect(sliderThumb.style.transform).toBe(
+        'translateX(-42.85714285714286%)',
+      );
+      expect(sliderFill.style.transform).toBe(
+        'scale3d(0.5714285714285714, 1, 1)',
+      );
+      expect(sliderBackground.style.transform).toBe(
+        'scale3d(0.4285714285714286, 1, 1)',
+      );
+    });
+
     it('should change its value based on mouse events (drag)', fakeAsync(() => {
       const {
         inputField,
@@ -408,7 +477,7 @@ describe('DtSlider', () => {
       );
     }));
 
-    it('should NOT call update is slider is disabled', fakeAsync(() => {
+    it('should NOT call update if slider is disabled', fakeAsync(() => {
       const {
         inputField,
         sliderThumb,

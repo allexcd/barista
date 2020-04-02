@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import {
   DOWN_ARROW,
   END,
@@ -113,15 +114,14 @@ export class DtSlider implements AfterViewInit, OnDestroy, OnInit {
   /** Holds the description of the size of the slider. */
   private _clientRect$: Observable<ClientRect>;
   /** Observer that gets triggered if the slider is resized on the screen. */
-  private _resizeObserver$ = new Subject();
+  private _resizeObserver$ = new Subject<null>();
   /** Variable to hold the ResizeObserver */
   private _observer: any;
   /** Observer that gets triggered if the input field value is changed. */
-  private inputFieldValue$ = new Subject<number>();
+  private _inputFieldValue$ = new Subject<number>();
 
   /**
    * Binding for the minimum value of the slider.
-   * TODO: getter and setter
    */
   @Input()
   get min(): number {
@@ -129,13 +129,16 @@ export class DtSlider implements AfterViewInit, OnDestroy, OnInit {
   }
   set min(min: number) {
     this._min = min;
-    this._updateSliderPosition(this._value, this._min, this._max);
+    if (this._min > this._value) {
+      this._updateValue(this._min, true);
+    } else {
+      this._updateSliderPosition(this._value, this._min, this._max);
+    }
   }
-  private _min: number;
+  private _min: number = 0;
 
   /**
    * Binding for the maximum value of the slider.
-   * TODO: getter and setter
    */
   @Input()
   get max(): number {
@@ -143,9 +146,13 @@ export class DtSlider implements AfterViewInit, OnDestroy, OnInit {
   }
   set max(max: number) {
     this._max = max;
-    this._updateSliderPosition(this._value, this._min, this._max);
+    if (this._max < this._value) {
+      this._updateValue(this._max, true);
+    } else {
+      this._updateSliderPosition(this._value, this._min, this._max);
+    }
   }
-  private _max: number;
+  private _max: number = 10;
 
   /**
    * Bindings for the step, if changed, roundShift needs to be recalculated.
@@ -169,7 +176,7 @@ export class DtSlider implements AfterViewInit, OnDestroy, OnInit {
     }
   }
   /** Holds the value of step internally */
-  private _step: number = 5;
+  private _step: number = 1;
 
   /** Binding for the disabled state. */
   @Input()
@@ -177,7 +184,7 @@ export class DtSlider implements AfterViewInit, OnDestroy, OnInit {
     return this._isDisabled;
   }
   set disabled(disabled: boolean) {
-    this._isDisabled = disabled;
+    this._isDisabled = coerceBooleanProperty(disabled);
     this._changeDetectionRef.markForCheck();
   }
   private _isDisabled: boolean = false;
@@ -203,12 +210,15 @@ export class DtSlider implements AfterViewInit, OnDestroy, OnInit {
     }
   }
 
+  /** Observer that completes on ngOnDestroy */
+  private _destroy$ = new Subject<void>();
+
   /**
    * Convert input string value to number and call
    * roundToSnap takes care of snapping the values to the steps
    */
   inputValueChanged(event: Event): void {
-    this.inputFieldValue$.next(
+    this._inputFieldValue$.next(
       +(event.currentTarget as HTMLInputElement).value,
     );
   }
@@ -236,9 +246,6 @@ export class DtSlider implements AfterViewInit, OnDestroy, OnInit {
   @ViewChild(DtInput, { static: true })
   _sliderInput: DtInput;
 
-  /** Observer that completes on ngOnDestroy */
-  private _destroy$ = new Subject<void>();
-
   constructor(
     private _changeDetectionRef: ChangeDetectorRef,
     private _zone: NgZone,
@@ -254,7 +261,7 @@ export class DtSlider implements AfterViewInit, OnDestroy, OnInit {
 
   ngAfterViewInit(): void {
     if (this._platform.isBrowser && 'ResizeObserver' in window) {
-      this._observer = new window.ResizeObserver(_ => {
+      this._observer = new window.ResizeObserver(() => {
         this._resizeObserver$.next();
       });
 
@@ -264,10 +271,7 @@ export class DtSlider implements AfterViewInit, OnDestroy, OnInit {
     this._clientRect$ = merge(
       this._resizeObserver$.pipe(debounceTime(50)),
       of(null), // at least one initial trigger is needed
-    ).pipe(
-      map(() => this._trackWrapper.nativeElement.getBoundingClientRect()),
-      takeUntil(this._destroy$),
-    );
+    ).pipe(map(() => this._trackWrapper.nativeElement.getBoundingClientRect()));
 
     this._zone.runOutsideAngular(() => {
       this._captureEvents();
@@ -282,7 +286,7 @@ export class DtSlider implements AfterViewInit, OnDestroy, OnInit {
     }
   }
 
-  /** @internal Updates The slider based on the new value */
+  /** Updates The slider based on the new value */
   private _updateSlider(value: any): void {
     this._trackWrapper.nativeElement.setAttribute(
       'aria-valuenow',
@@ -313,6 +317,11 @@ export class DtSlider implements AfterViewInit, OnDestroy, OnInit {
    * TODO: refactor this to have cleaner streams, and possibly refactor into smaller functions.
    */
   private _captureEvents(): void {
+    if (!this._platform.isBrowser) {
+      // early exit if env is not browser
+      return;
+    }
+
     const start$ = merge(
       fromEvent(this._trackWrapper.nativeElement, 'mousedown'),
       fromEvent(this._trackWrapper.nativeElement, 'touchstart'),
@@ -370,7 +379,6 @@ export class DtSlider implements AfterViewInit, OnDestroy, OnInit {
         return newValue;
       }),
       distinctUntilChanged(),
-      takeUntil(this._destroy$),
     );
 
     // triggered by drag and click
@@ -389,16 +397,14 @@ export class DtSlider implements AfterViewInit, OnDestroy, OnInit {
         return newValue;
       }),
       distinctUntilChanged(),
-      takeUntil(this._destroy$),
     );
 
-    const inputValue$ = this.inputFieldValue$.pipe(
+    const inputValue$ = this._inputFieldValue$.pipe(
       /**
        * distinctUntilChanged() purposefully left out, to round the value
        * and update the input field with the rounded value
        */
       map(value => roundToSnap(value, this.step, this._min, this._max)),
-      takeUntil(this._destroy$),
     );
 
     merge(this._value$, inputValue$, mouse$, keyDown$)
