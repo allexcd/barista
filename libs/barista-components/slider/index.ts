@@ -14,5 +14,5 @@
  * limitations under the License.
  */
 
-export { DtSlider } from './src/slider';
+export { DtSlider, DtSliderUnit, DtSliderLabel } from './src/slider';
 export * from './src/slider-module';

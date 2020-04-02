@@ -62,7 +62,6 @@ import {
   share,
   switchMap,
   takeUntil,
-  tap,
   withLatestFrom,
 } from 'rxjs/operators';
 import {
@@ -114,7 +113,7 @@ export class DtSlider implements AfterViewInit, OnDestroy, OnInit {
   /** Holds the description of the size of the slider. */
   private _clientRect$: Observable<ClientRect>;
   /** Observer that gets triggered if the slider is resized on the screen. */
-  private _resizeObserver$ = new Subject<null>();
+  private _resizeObserver$ = new Subject<void>();
   /** Variable to hold the ResizeObserver */
   private _observer: any;
   /** Observer that gets triggered if the input field value is changed. */
@@ -314,7 +313,6 @@ export class DtSlider implements AfterViewInit, OnDestroy, OnInit {
 
   /**
    * Capture user events, and implement necessary streams to update view.
-   * TODO: refactor this to have cleaner streams, and possibly refactor into smaller functions.
    */
   private _captureEvents(): void {
     if (!this._platform.isBrowser) {
@@ -410,10 +408,9 @@ export class DtSlider implements AfterViewInit, OnDestroy, OnInit {
     merge(this._value$, inputValue$, mouse$, keyDown$)
       .pipe(
         filter(() => !this._isDisabled),
-        tap(value => this._updateSlider(value)),
         takeUntil(this._destroy$),
       )
-      .subscribe();
+      .subscribe(value => this._updateSlider(value));
   }
 }
 
@@ -428,6 +425,9 @@ export class DtSlider implements AfterViewInit, OnDestroy, OnInit {
 @Directive({
   selector: `dt-slider-label, [dt-slider-label], [dtSliderLabel]`,
   exportAs: 'dtSliderLabel',
+  host: {
+    class: 'dt-slider-label',
+  },
 })
 export class DtSliderLabel {}
 

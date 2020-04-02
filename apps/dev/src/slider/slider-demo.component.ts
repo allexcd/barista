@@ -19,7 +19,6 @@ import { Component } from '@angular/core';
 @Component({
   selector: 'slider-dev-app-demo',
   templateUrl: 'slider-demo.component.html',
-  styleUrls: ['slider-demo.component.scss'],
 })
 export class SliderDemo {
   disabled = false;
