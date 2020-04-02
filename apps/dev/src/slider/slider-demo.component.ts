@@ -22,4 +22,8 @@ import { Component } from '@angular/core';
 })
 export class SliderDemo {
   disabled = false;
+  value: number = 0;
+  step: number = 1;
+  min: number = 0;
+  max: number = 10;
 }

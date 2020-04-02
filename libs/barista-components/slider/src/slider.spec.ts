@@ -634,6 +634,37 @@ describe('DtSlider', () => {
       expect(sliderBackground.style.transform).toBe('scale3d(0, 1, 1)');
     });
   });
+
+  describe('Slider with default values', () => {
+    let fixture;
+    let testComponent: TestDefaultSliderApp;
+
+    beforeEach(() => {
+      fixture = createComponent(TestDefaultSliderApp);
+      testComponent = fixture.componentInstance;
+    });
+
+    it('should be present, and have the default values', () => {
+      const {
+        inputField,
+        sliderThumb,
+        sliderFill,
+        sliderBackground,
+      } = getElements(fixture);
+
+      expect(testComponent).toBeTruthy();
+      expect(testComponent.slider.value).toBe(0);
+      expect(testComponent.slider.min).toBe(0);
+      expect(testComponent.slider.max).toBe(10);
+      expect(testComponent.slider.step).toBe(1);
+      expect(testComponent.slider.disabled).toBe(false);
+
+      expect(inputField.value).toBe('0');
+      expect(sliderThumb.style.transform).toBe('translateX(-100%)');
+      expect(sliderFill.style.transform).toBe('scale3d(0, 1, 1)');
+      expect(sliderBackground.style.transform).toBe('scale3d(1, 1, 1)');
+    });
+  });
 });
 
 @Component({
@@ -660,6 +691,17 @@ class TestApp {
   `,
 })
 class TestBigApp {
+  @ViewChild(DtSlider, { static: true })
+  slider: DtSlider;
+}
+
+@Component({
+  selector: 'dt-default-test-app',
+  template: `
+    <dt-slider />
+  `,
+})
+class TestDefaultSliderApp {
   @ViewChild(DtSlider, { static: true })
   slider: DtSlider;
 }

@@ -14,7 +14,10 @@
  * limitations under the License.
  */
 
-import { coerceBooleanProperty } from '@angular/cdk/coercion';
+import {
+  coerceBooleanProperty,
+  coerceNumberProperty,
+} from '@angular/cdk/coercion';
 import {
   DOWN_ARROW,
   END,
@@ -42,7 +45,11 @@ import {
   ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
-import { clamp, isDefined } from '@dynatrace/barista-components/core';
+import {
+  clamp,
+  isDefined,
+  roundToDecimal,
+} from '@dynatrace/barista-components/core';
 import { DtInput } from '@dynatrace/barista-components/input';
 import {
   animationFrameScheduler,
@@ -127,7 +134,7 @@ export class DtSlider implements AfterViewInit, OnDestroy, OnInit {
     return this._min;
   }
   set min(min: number) {
-    this._min = min;
+    this._min = coerceNumberProperty(min);
     if (this._min > this._value) {
       this._updateValue(this._min, true);
     } else {
@@ -144,7 +151,7 @@ export class DtSlider implements AfterViewInit, OnDestroy, OnInit {
     return this._max;
   }
   set max(max: number) {
-    this._max = max;
+    this._max = coerceNumberProperty(max);
     if (this._max < this._value) {
       this._updateValue(this._max, true);
     } else {
@@ -162,7 +169,7 @@ export class DtSlider implements AfterViewInit, OnDestroy, OnInit {
   }
   set step(step: number) {
     if (isDefined(step)) {
-      this._step = step;
+      this._step = coerceNumberProperty(step);
     }
 
     this._roundShift = 0;
@@ -196,9 +203,9 @@ export class DtSlider implements AfterViewInit, OnDestroy, OnInit {
     return this._value;
   }
   set value(value: number) {
-    this._updateValue(value);
+    this._updateValue(coerceNumberProperty(value));
   }
-  private _value: number;
+  private _value: number = 0;
 
   /** Updates the value if the update is triggered by the consumer. */
   private _updateValue(value: number, userTriggered: boolean = true): void {
@@ -369,12 +376,11 @@ export class DtSlider implements AfterViewInit, OnDestroy, OnInit {
           this.step,
           keyboardEvent.keyCode,
         );
-        const newValue = clamp(
+        const rounded = roundToDecimal(
           this._value + valueAddition,
-          this._min,
-          this._max,
+          this._roundShift,
         );
-        return newValue;
+        return clamp(rounded, this._min, this._max);
       }),
       distinctUntilChanged(),
     );
