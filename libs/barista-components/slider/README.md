@@ -31,13 +31,16 @@ The `DtSlider` tries to mimic the behavior of the native HTML range element
 regarding accessibility. It supports the following aria attributes:
 `aria-valuenow`, `aria-valuemin`, `aria-valuemax`, `aria-disabled`,
 `aria-orientation` (this latter is hard-coded to `horizontal`). It supports the
-following keyboard keys: | Name | Description | | ---------------------------- |
------------------------------------------- | | `arrow-up` and `arrow-right` |
-Increase the slider value by `step`. | | `arrow-down` and `arrow-left`| Decrease
-the slider value by `step`. | | `page-up` | Increase the slider value by
-`10 * step`. | | `page-down` | Decrease the slider value by `10 * step`. | |
-`home` | Set the slider value to `min`. | | `end` | Set the slider value to
-`max`. |
+following keyboard keys:
+
+| Name                          | Description                               |
+| ----------------------------- | ----------------------------------------- |
+| `arrow-up` and `arrow-right`  | Increase the slider value by `step`.      |
+| `arrow-down` and `arrow-left` | Decrease the slider value by `step`.      |
+| `page-up`                     | Increase the slider value by `10 * step`. |
+| `page-down`                   | Decrease the slider value by `10 * step`. |
+| `home`                        | Set the slider value to `min`.            |
+| `end`                         | Set the slider value to `max`.            |
 
 ## Snapping behavior
 
