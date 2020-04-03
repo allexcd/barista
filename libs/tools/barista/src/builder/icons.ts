@@ -44,9 +44,9 @@ import { convertJsonChangelogToMarkdown } from '../utils/convert-json-changelog-
 
 const TRANSFORMERS: BaPageTransformer[] = [
   markdownToHtmlTransformer,
-  relativeUrlTransformer,
   extractH1ToTitleTransformer,
   headingIdTransformer,
+  relativeUrlTransformer,
 ];
 
 /**

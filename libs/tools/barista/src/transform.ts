@@ -203,7 +203,7 @@ export const copyHeadlineTransformer: BaPageTransformer = async source => {
   return transformed;
 };
 
-/** Replaces internal href links with routerLink links */
+/** Replaces internal href links with contentLink links */
 export const relativeUrlTransformer: BaPageTransformer = async source => {
   const transformed = { ...source };
   if (source.content && source.content.length) {
@@ -213,29 +213,46 @@ export const relativeUrlTransformer: BaPageTransformer = async source => {
         links.each((_, link) => {
           const linkValue = $(link).attr('href');
           if (linkValue && isRelativeUrl(linkValue)) {
-            let u = parse(linkValue);
-            if (u.pathname === null) {
+            let url = parse(linkValue);
+            // Link Value
+            if (url.pathname === null) {
               $(link.attribs).append(
                 $(link)
                   .removeAttr('href')
-                  .attr('[routerLink]', `['/']`),
+                  .attr('contentlink', '/'),
               );
             } else {
               $(link.attribs).append(
                 $(link)
                   .removeAttr('href')
-                  .attr('[routerLink]', `['${u.pathname}']`),
+                  .attr('contentlink', url.pathname),
               );
             }
-            if (u.hash) {
+            // Fragment
+            if (url.hash) {
               $(link.attribs).append(
-                $(link).attr('fragments', u.hash.replace('#', '')),
+                $(link).attr('fragment', url.hash.replace('#', '')),
               );
             }
-            if (u.query) {
-              const query = toQueryParamValue(u.query);
-              $(link.attribs).append($(link).attr('[queryParams]', query));
+            // QueryParam
+            if (url.query) {
+              $(link.attribs).append(
+                $(link).attr('queryParams', toQueryParamValue(url.query)),
+              );
             }
+            // Link text
+            if ($(link).html) {
+              $(link.attribs).append(
+                $(link).attr(
+                  'linkValue',
+                  $(link)
+                    .html()!
+                    .trim(),
+                ),
+              );
+            }
+
+            $(link.attribs).append($(link).attr('id', 'contentLink'));
           }
         });
       }
@@ -355,7 +372,7 @@ function toQueryParamValue(query: string): string {
   const params = new URLSearchParams(query);
   const queryParams: string[] = [];
   params.forEach((value, key) => {
-    queryParams.push(`'${key}': '${value}'`);
+    queryParams.push(`${key}: ${value}`);
   });
   return `{${queryParams.join(',')}}`;
 }

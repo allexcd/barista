@@ -126,8 +126,8 @@ describe('Barista transformers', () => {
         content,
       });
       expect(transformed.content).toBe(
-        '<h2 id="what-s-new">What\'s new?</h2>' +
-          '<h3 id="coffee-tea">Coffee & tea</h3>' +
+        '<h2 id="what-s-new">What&apos;s new?</h2>' +
+          '<h3 id="coffee-tea">Coffee &amp; tea</h3>' +
           '<h3 id="awesome">Awesome!</h3>',
       );
     });
@@ -219,15 +219,15 @@ describe('Barista transformers', () => {
         <a href="smthn://resources/guides">Resource</a>
         <a href="lorem://resources/guides">Resource</a>
         <a href="//resources/guides">Resource</a>
-        <a [routerLink]="['resources/guides']">Resource</a>
-        <a [routerLink]="['/resources/bundle']">Resource</a>
-        <a [routerLink]="['/brand/guides']" fragments="headline1">Resource</a>
-        <a [routerLink]="['/']" fragments="headline1">Resource</a>
-        <a [routerLink]="['/']" fragments="submitting-a-pull-request">submit a pull request</a>
-        <a [routerLink]="['/patterns/button-alignment']" [queryParams]="{'sort': 'ASC'}">Resource</a>
-        <a [routerLink]="['/patterns/button-alignment']" [queryParams]="{'sort-order': 'ASC'}">Resource</a>
-        <a [routerLink]="['/components/button']" fragments="headline1" [queryParams]="{'sort': 'ASC'}">Resource</a>
-        <a [routerLink]="['/patterns/button-alignment']" [queryParams]="{'sort': 'ASC','id': '2'}">Resource</a>
+        <a contentlink="resources/guides" linkValue="Resource" id="contentLink">Resource</a>
+        <a contentlink="/resources/bundle" linkValue="Resource" id="contentLink">Resource</a>
+        <a contentlink="/brand/guides" fragment="headline1" linkValue="Resource" id="contentLink">Resource</a>
+        <a contentlink="/" fragment="headline1" linkValue="Resource" id="contentLink">Resource</a>
+        <a contentlink="/" fragment="submitting-a-pull-request" linkValue="submit a pull request" id="contentLink">submit a pull request</a>
+        <a contentlink="/patterns/button-alignment" queryParams="{sort: ASC}" linkValue="Resource" id="contentLink">Resource</a>
+        <a contentlink="/patterns/button-alignment" queryParams="{sort-order: ASC}" linkValue="Resource" id="contentLink">Resource</a>
+        <a contentlink="/components/button" fragment="headline1" queryParams="{sort: ASC}" linkValue="Resource" id="contentLink">Resource</a>
+        <a contentlink="/patterns/button-alignment" queryParams="{sort: ASC,id: 2}" linkValue="Resource" id="contentLink">Resource</a>
       `,
       );
     });

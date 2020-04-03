@@ -44,9 +44,9 @@ import {
 
 const TRANSFORMERS: BaPageTransformer[] = [
   markdownToHtmlTransformer,
-  relativeUrlTransformer,
   headingIdTransformer,
   copyHeadlineTransformer,
+  relativeUrlTransformer,
 ];
 
 /** Page-builder for Strapi CMS pages. */
