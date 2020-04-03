@@ -61,7 +61,7 @@ describe('DtSlider', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [DtSliderModule],
-      declarations: [TestApp, TestBigApp, TestDefaultSliderApp],
+      declarations: [TestApp, TestBindingApp, TestBigApp, TestDefaultSliderApp],
       providers: [],
     });
 
@@ -670,6 +670,73 @@ describe('DtSlider', () => {
       expect(sliderBackground.style.transform).toBe('scale3d(1, 1, 1)');
     });
   });
+
+  describe('slider with bindings', () => {
+    let fixture;
+    let testComponent: TestBindingApp;
+
+    beforeEach(() => {
+      fixture = createComponent(TestBindingApp);
+      testComponent = fixture.componentInstance;
+    });
+
+    it('should update the value when the binding updates', () => {
+      testComponent.value = 5;
+      fixture.detectChanges();
+
+      const {
+        inputField,
+        sliderThumb,
+        sliderFill,
+        sliderBackground,
+        sliderWrapper,
+      } = getElements(fixture);
+
+      expect(inputField.value).toBe('5');
+      expect(sliderThumb.style.transform).toBe('translateX(-50%)');
+      expect(sliderFill.style.transform).toBe('scale3d(0.5, 1, 1)');
+      expect(sliderBackground.style.transform).toBe('scale3d(0.5, 1, 1)');
+
+      testComponent.min = 5;
+      fixture.detectChanges();
+
+      expect(inputField.value).toBe('5');
+      expect(sliderThumb.style.transform).toBe('translateX(-100%)');
+      expect(sliderFill.style.transform).toBe('scale3d(0, 1, 1)');
+      expect(sliderBackground.style.transform).toBe('scale3d(1, 1, 1)');
+
+      testComponent.value = 6;
+      testComponent.max = 6;
+      fixture.detectChanges();
+
+      expect(inputField.value).toBe('6');
+      expect(sliderThumb.style.transform).toBe('translateX(-0%)');
+      expect(sliderFill.style.transform).toBe('scale3d(1, 1, 1)');
+      expect(sliderBackground.style.transform).toBe('scale3d(0, 1, 1)');
+
+      testComponent.step = 0.5;
+      fixture.detectChanges();
+      testComponent.value = 5.5;
+      fixture.detectChanges();
+
+      expect(inputField.value).toBe('5.5');
+      expect(sliderThumb.style.transform).toBe('translateX(-50%)');
+      expect(sliderFill.style.transform).toBe('scale3d(0.5, 1, 1)');
+      expect(sliderBackground.style.transform).toBe('scale3d(0.5, 1, 1)');
+
+      testComponent.disabled = true;
+      fixture.detectChanges();
+
+      expect(inputField.value).toBe('5.5');
+      expect(sliderThumb.style.transform).toBe('translateX(-50%)');
+      expect(sliderFill.style.transform).toBe('scale3d(0.5, 1, 1)');
+      expect(sliderBackground.style.transform).toBe('scale3d(0.5, 1, 1)');
+      expect(sliderWrapper.classList.contains('dt-disabled')).toBe(true);
+      expect(sliderWrapper.getAttribute('aria-disabled')).toBe('true');
+      expect(sliderWrapper.getAttribute('tabindex')).toBe('-1');
+      expect(inputField.getAttribute('disabled')).not.toBeNull();
+    });
+  });
 });
 
 @Component({
@@ -684,6 +751,29 @@ describe('DtSlider', () => {
 class TestApp {
   @ViewChild(DtSlider, { static: true })
   slider: DtSlider;
+}
+
+@Component({
+  selector: 'dt-test-app',
+  template: `
+    <dt-slider
+      [value]="value"
+      [min]="min"
+      [max]="max"
+      [step]="step"
+      [disabled]="disabled"
+    >
+      <dt-slider-label>label</dt-slider-label>
+      <dt-slider-unit>units</dt-slider-unit>
+    </dt-slider>
+  `,
+})
+class TestBindingApp {
+  disabled = false;
+  value: number = 0;
+  step: number = 1;
+  min: number = 0;
+  max: number = 10;
 }
 
 @Component({

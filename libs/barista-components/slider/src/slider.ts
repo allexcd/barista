@@ -294,13 +294,10 @@ export class DtSlider implements AfterViewInit, OnDestroy, OnInit {
 
   /** Updates The slider based on the new value */
   private _updateSlider(value: any): void {
-    this._trackWrapper.nativeElement.setAttribute(
-      'aria-valuenow',
-      value.toString(),
-    );
     this._updateInput(value);
     this._updateValue(value, false);
     this._updateSliderPosition(value, this._min, this._max);
+    this._changeDetectionRef.markForCheck();
   }
 
   /** Updates the input field with new value. */
@@ -416,7 +413,7 @@ export class DtSlider implements AfterViewInit, OnDestroy, OnInit {
         filter(() => !this._isDisabled),
         takeUntil(this._destroy$),
       )
-      .subscribe(value => this._updateSlider(value));
+      .subscribe(value => this._zone.run(() => this._updateSlider(value)));
   }
 }
 
