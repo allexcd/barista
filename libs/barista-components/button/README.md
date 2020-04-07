@@ -1,5 +1,7 @@
 # Button
 
+// TODO: REMOVE [dummy link](/components/input) [...](wold.jpeg)
+
 <ba-ux-snippet name="button-intro"></ba-ux-snippet>
 
 <ba-live-example name="DtExampleButtonDefault"></ba-live-example>

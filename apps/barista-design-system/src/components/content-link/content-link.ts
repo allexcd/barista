@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { Component, Input, HostListener, OnInit } from '@angular/core';
+import { Component, Input, HostListener } from '@angular/core';
 import { Router } from '@angular/router';
 
 /**
@@ -26,7 +26,8 @@ import { Router } from '@angular/router';
   selector: 'a[contentlink]',
   template: '{{linkValue}}',
 })
-export class BaContentLink implements OnInit {
+//TODO: Implement HTML sanitizer in on init for linkValue if <ng-content> doesn't work.
+export class BaContentLink {
   /** Absolute url for navigation on the page. For example /components/button */
   @Input() contentlink: string;
 
@@ -40,8 +41,6 @@ export class BaContentLink implements OnInit {
   @Input() linkValue: string;
 
   constructor(private _router: Router) {}
-
-  ngOnInit(): void {}
 
   @HostListener('click', [
     '$event.button',
