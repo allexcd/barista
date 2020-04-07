@@ -203,7 +203,7 @@ export const copyHeadlineTransformer: BaPageTransformer = async source => {
   return transformed;
 };
 
-/** Replaces internal href links with contentLink links */
+/** Replaces absolute href with contentLink */
 export const relativeUrlTransformer: BaPageTransformer = async source => {
   const transformed = { ...source };
   if (source.content && source.content.length) {

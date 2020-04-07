@@ -111,7 +111,7 @@ export class BaTocService implements OnDestroy {
   ): BaTocItem[] {
     const idMap = new Map<string, number>();
     const toc: BaTocItem[] = [];
-    // Needs sort since h2 headlines need to be pushed first.
+    // H2 headlines must be pushed first.
     headlines.sort((headlineA, headlineB) => {
       if (headlineA.tagName > headlineB.tagName) {
         return 1;
