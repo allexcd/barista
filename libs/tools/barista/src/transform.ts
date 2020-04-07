@@ -219,13 +219,13 @@ export const relativeUrlTransformer: BaPageTransformer = async source => {
               $(link.attribs).append(
                 $(link)
                   .removeAttr('href')
-                  .attr('contentlink', '/'),
+                  .attr('contentLink', '/'),
               );
             } else {
               $(link.attribs).append(
                 $(link)
                   .removeAttr('href')
-                  .attr('contentlink', url.pathname),
+                  .attr('contentLink', url.pathname),
               );
             }
             // Fragment
@@ -240,19 +240,6 @@ export const relativeUrlTransformer: BaPageTransformer = async source => {
                 $(link).attr('queryParams', toQueryParamValue(url.query)),
               );
             }
-            // Link text
-            if ($(link).html) {
-              $(link.attribs).append(
-                $(link).attr(
-                  'linkValue',
-                  $(link)
-                    .html()!
-                    .trim(),
-                ),
-              );
-            }
-
-            $(link.attribs).append($(link).attr('id', 'contentLink'));
           }
         });
       }

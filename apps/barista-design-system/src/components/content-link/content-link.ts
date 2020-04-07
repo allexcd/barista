@@ -14,8 +14,15 @@
  * limitations under the License.
  */
 
-import { Component, Input, HostListener } from '@angular/core';
-import { Router } from '@angular/router';
+import {
+  Component,
+  Input,
+  HostListener,
+  HostBinding,
+  OnChanges,
+  OnInit,
+} from '@angular/core';
+import { Router, Event, NavigationEnd } from '@angular/router';
 
 /**
  * The ba-content link component is used because we need to dynamically
@@ -23,13 +30,16 @@ import { Router } from '@angular/router';
  * So we create a component that handles the navigation.
  */
 @Component({
-  selector: 'a[contentlink]',
-  template: '{{linkValue}}',
+  selector: 'a[contentLink]',
+  template: '<ng-content></ng-content>',
 })
 //TODO: Implement HTML sanitizer in on init for linkValue if <ng-content> doesn't work.
-export class BaContentLink {
+export class BaContentLink implements OnChanges, OnInit {
   /** Absolute url for navigation on the page. For example /components/button */
-  @Input() contentlink: string;
+  @Input() contentLink: string;
+
+  /** Href link to display */
+  @HostBinding() href: string;
 
   /** QueryParams of absolute url */
   @Input() queryParams: { [k: string]: string };
@@ -37,10 +47,22 @@ export class BaContentLink {
   /** Fragement of absolute url */
   @Input() fragment: string;
 
-  /** link value of absolute url */
-  @Input() linkValue: string;
+  constructor(private _router: Router) {
+    //todo unsubscribe
+    this._router.events.subscribe((navigation: Event) => {
+      if (navigation instanceof NavigationEnd) {
+        this._updateTargetUrlAndHref();
+      }
+    });
+  }
 
-  constructor(private _router: Router) {}
+  ngOnInit(): void {
+    this._updateTargetUrlAndHref();
+  }
+
+  ngOnChanges(): void {
+    this._updateTargetUrlAndHref();
+  }
 
   @HostListener('click', [
     '$event.button',
@@ -53,14 +75,19 @@ export class BaContentLink {
     ctrlKey: boolean,
     metaKey: boolean,
     shiftKey: boolean,
-  ): void {
+  ): boolean {
     if (button !== 0 || ctrlKey || metaKey || shiftKey) {
-      return;
+      return true;
     }
 
-    this._router.navigate([this.contentlink], {
+    this._router.navigate([this.contentLink], {
       fragment: this.fragment,
       queryParams: this.queryParams,
     });
+    return false;
+  }
+
+  private _updateTargetUrlAndHref(): void {
+    this.href = this.contentLink;
   }
 }

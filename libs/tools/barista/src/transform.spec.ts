@@ -219,15 +219,15 @@ describe('Barista transformers', () => {
         <a href="smthn://resources/guides">Resource</a>
         <a href="lorem://resources/guides">Resource</a>
         <a href="//resources/guides">Resource</a>
-        <a contentlink="resources/guides" linkValue="Resource" id="contentLink">Resource</a>
-        <a contentlink="/resources/bundle" linkValue="Resource" id="contentLink">Resource</a>
-        <a contentlink="/brand/guides" fragment="headline1" linkValue="Resource" id="contentLink">Resource</a>
-        <a contentlink="/" fragment="headline1" linkValue="Resource" id="contentLink">Resource</a>
-        <a contentlink="/" fragment="submitting-a-pull-request" linkValue="submit a pull request" id="contentLink">submit a pull request</a>
-        <a contentlink="/patterns/button-alignment" queryParams="{sort: ASC}" linkValue="Resource" id="contentLink">Resource</a>
-        <a contentlink="/patterns/button-alignment" queryParams="{sort-order: ASC}" linkValue="Resource" id="contentLink">Resource</a>
-        <a contentlink="/components/button" fragment="headline1" queryParams="{sort: ASC}" linkValue="Resource" id="contentLink">Resource</a>
-        <a contentlink="/patterns/button-alignment" queryParams="{sort: ASC,id: 2}" linkValue="Resource" id="contentLink">Resource</a>
+        <a contentLink="resources/guides">Resource</a>
+        <a contentLink="/resources/bundle">Resource</a>
+        <a contentLink="/brand/guides" fragment="headline1">Resource</a>
+        <a contentLink="/" fragment="headline1">Resource</a>
+        <a contentLink="/" fragment="submitting-a-pull-request">submit a pull request</a>
+        <a contentLink="/patterns/button-alignment" queryParams="{sort: ASC}">Resource</a>
+        <a contentLink="/patterns/button-alignment" queryParams="{sort-order: ASC}">Resource</a>
+        <a contentLink="/components/button" fragment="headline1" queryParams="{sort: ASC}">Resource</a>
+        <a contentLink="/patterns/button-alignment" queryParams="{sort: ASC,id: 2}">Resource</a>
       `,
       );
     });
