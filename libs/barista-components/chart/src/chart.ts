@@ -63,7 +63,7 @@ import {
   MarkerHoverState,
   MarkerState,
 } from 'highcharts';
-import { merge as lodashMerge } from 'lodash';
+import { merge as lodashMerge } from 'lodash-es';
 import {
   BehaviorSubject,
   defer,

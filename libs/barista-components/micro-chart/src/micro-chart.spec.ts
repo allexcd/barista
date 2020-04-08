@@ -21,7 +21,7 @@ import { Component, Type, ViewChild } from '@angular/core';
 import { ComponentFixture, TestBed, async } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { AxisOptions, DataPoint } from 'highcharts';
-import { merge } from 'lodash';
+import { merge } from 'lodash-es';
 import { BehaviorSubject } from 'rxjs';
 import {
   DtChartModule,

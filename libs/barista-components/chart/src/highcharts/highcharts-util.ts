@@ -15,7 +15,7 @@
  */
 
 import { AxisOptions, Options as HighchartsOptions } from 'highcharts';
-import { merge as lodashMerge } from 'lodash';
+import { merge as lodashMerge } from 'lodash-es';
 
 import {
   DtTheme,

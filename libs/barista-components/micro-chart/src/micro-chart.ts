@@ -36,7 +36,7 @@ import {
   LineChartSeriesOptions,
   Options,
 } from 'highcharts';
-import { merge as lodashMerge } from 'lodash';
+import { merge as lodashMerge } from 'lodash-es';
 import { Observable, Subscription } from 'rxjs';
 import { map } from 'rxjs/operators';
 
