@@ -292,7 +292,7 @@
           }
         },
         "lint-styles": {
-          "builder": "@dynatrace/barista-builders:stylelint",
+          "builder": "./dist/libs/workspace:stylelint",
           "options": {
             "stylelintConfig": ".stylelintrc",
             "reportFile": "dist/stylelint/report.xml",
@@ -389,7 +389,7 @@
           }
         },
         "lint-styles": {
-          "builder": "@dynatrace/barista-builders:stylelint",
+          "builder": "./dist/libs/workspace:stylelint",
           "options": {
             "stylelintConfig": "libs/examples/.stylelintrc",
             "reportFile": "dist/stylelint/report.xml",
@@ -405,7 +405,7 @@
       "projectType": "application",
       "architect": {
         "build": {
-          "builder": "@dynatrace/workspace:build-barista",
+          "builder": "./dist/libs/workspace:build-barista",
           "options": {
             "devServerTarget": "barista-design-system:serve-ssr",
             "outputPath": "dist/apps/barista-design-system/browser",
@@ -586,7 +586,7 @@
           }
         },
         "lint-styles": {
-          "builder": "@dynatrace/barista-builders:stylelint",
+          "builder": "./dist/libs/workspace:stylelint",
           "options": {
             "stylelintConfig": ".stylelintrc",
             "reportFile": "dist/stylelint/report.xml",
@@ -758,7 +758,7 @@
     },
     "workspace": {
       "root": "libs/workspace",
-      "sourceRoot": "libs/workspace/src",
+      "sourceRoot": "libs/workspace",
       "projectType": "library",
       "schematics": {},
       "architect": {
@@ -782,32 +782,21 @@
           }
         },
         "build": {
-          "builder": "@nrwl/node:package",
+          "builder": "@nrwl/node:build",
           "options": {
-            "outputPath": "node_modules/@dynatrace/workspace",
-            "tsConfig": "libs/workspace/tsconfig.lib.json",
-            "packageJson": "libs/workspace/package.json",
+            "outputPath": "dist/libs/workspace",
             "main": "libs/workspace/src/index.ts",
+            "tsConfig": "libs/workspace/tsconfig.lib.json",
+            "webpackConfig": "libs/workspace/webpack.config.js",
             "assets": [
-              "libs/workspace/*.md",
               {
                 "input": "./libs/workspace/src",
-                "glob": "**/*.!(ts)",
+                "glob": "**/*.{json,md}",
                 "output": "./src"
               },
               {
                 "input": "./libs/workspace",
-                "glob": "collection.json",
-                "output": "."
-              },
-              {
-                "input": "./libs/workspace",
-                "glob": "builders.json",
-                "output": "."
-              },
-              {
-                "input": "./libs/workspace",
-                "glob": "**/*.json",
+                "glob": "{package,builders,collection}.json",
                 "output": "."
               }
             ]
@@ -869,31 +858,6 @@
               "libs/tools/barista/tsconfig.spec.json"
             ],
             "exclude": ["**/node_modules/**", "!tools/barista/**"]
-          }
-        }
-      }
-    },
-    "builders": {
-      "root": "libs/tools/builders",
-      "sourceRoot": "libs/tools/builders",
-      "projectType": "library",
-      "architect": {
-        "test": {
-          "builder": "@nrwl/jest:jest",
-          "options": {
-            "jestConfig": "libs/tools/builders/jest.config.js",
-            "tsConfig": "libs/tools/builders/tsconfig.spec.json",
-            "passWithNoTests": true
-          }
-        },
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": [
-              "libs/tools/builders/tsconfig.json",
-              "libs/tools/builders/tsconfig.spec.json"
-            ],
-            "exclude": ["**/node_modules/**", "!tools/builders/**"]
           }
         }
       }
@@ -1051,7 +1015,7 @@
       "sourceRoot": "libs/tools/linting/src",
       "architect": {
         "build": {
-          "builder": "@dynatrace/barista-builders:typescript",
+          "builder": "./dist/libs/workspace:typescript",
           "options": {
             "tsConfig": "libs/tools/linting/tsconfig.json",
             "outDir": "dist/libs/components/tslint"
@@ -1083,7 +1047,7 @@
           }
         },
         "build": {
-          "builder": "@dynatrace/barista-builders:packager",
+          "builder": "./dist/libs/workspace:packager",
           "options": {
             "buildTarget": "packagr",
             "releasePackageJson": "libs/barista-components/package.json",
@@ -1131,7 +1095,7 @@
           }
         },
         "lint-styles": {
-          "builder": "@dynatrace/barista-builders:stylelint",
+          "builder": "./dist/libs/workspace:stylelint",
           "options": {
             "stylelintConfig": ".stylelintrc",
             "reportFile": "dist/stylelint/report.xml",
@@ -1171,7 +1135,7 @@
           }
         },
         "lint-styles": {
-          "builder": "@dynatrace/barista-builders:stylelint",
+          "builder": "./dist/libs/workspace:stylelint",
           "options": {
             "stylelintConfig": ".stylelintrc",
             "reportFile": "dist/stylelint/report.xml",
@@ -1211,7 +1175,7 @@
           }
         },
         "lint-styles": {
-          "builder": "@dynatrace/barista-builders:stylelint",
+          "builder": "./dist/libs/workspace:stylelint",
           "options": {
             "stylelintConfig": ".stylelintrc",
             "reportFile": "dist/stylelint/report.xml",
@@ -1251,7 +1215,7 @@
           }
         },
         "lint-styles": {
-          "builder": "@dynatrace/barista-builders:stylelint",
+          "builder": "./dist/libs/workspace:stylelint",
           "options": {
             "stylelintConfig": ".stylelintrc",
             "reportFile": "dist/stylelint/report.xml",
@@ -1291,7 +1255,7 @@
           }
         },
         "lint-styles": {
-          "builder": "@dynatrace/barista-builders:stylelint",
+          "builder": "./dist/libs/workspace:stylelint",
           "options": {
             "stylelintConfig": ".stylelintrc",
             "reportFile": "dist/stylelint/report.xml",
@@ -1331,7 +1295,7 @@
           }
         },
         "lint-styles": {
-          "builder": "@dynatrace/barista-builders:stylelint",
+          "builder": "./dist/libs/workspace:stylelint",
           "options": {
             "stylelintConfig": ".stylelintrc",
             "reportFile": "dist/stylelint/report.xml",
@@ -1371,7 +1335,7 @@
           }
         },
         "lint-styles": {
-          "builder": "@dynatrace/barista-builders:stylelint",
+          "builder": "./dist/libs/workspace:stylelint",
           "options": {
             "stylelintConfig": ".stylelintrc",
             "reportFile": "dist/stylelint/report.xml",
@@ -1411,7 +1375,7 @@
           }
         },
         "lint-styles": {
-          "builder": "@dynatrace/barista-builders:stylelint",
+          "builder": "./dist/libs/workspace:stylelint",
           "options": {
             "stylelintConfig": ".stylelintrc",
             "reportFile": "dist/stylelint/report.xml",
@@ -1451,7 +1415,7 @@
           }
         },
         "lint-styles": {
-          "builder": "@dynatrace/barista-builders:stylelint",
+          "builder": "./dist/libs/workspace:stylelint",
           "options": {
             "stylelintConfig": ".stylelintrc",
             "reportFile": "dist/stylelint/report.xml",
@@ -1491,7 +1455,7 @@
           }
         },
         "lint-styles": {
-          "builder": "@dynatrace/barista-builders:stylelint",
+          "builder": "./dist/libs/workspace:stylelint",
           "options": {
             "stylelintConfig": ".stylelintrc",
             "reportFile": "dist/stylelint/report.xml",
@@ -1531,7 +1495,7 @@
           }
         },
         "lint-styles": {
-          "builder": "@dynatrace/barista-builders:stylelint",
+          "builder": "./dist/libs/workspace:stylelint",
           "options": {
             "stylelintConfig": ".stylelintrc",
             "reportFile": "dist/stylelint/report.xml",
@@ -1571,7 +1535,7 @@
           }
         },
         "lint-styles": {
-          "builder": "@dynatrace/barista-builders:stylelint",
+          "builder": "./dist/libs/workspace:stylelint",
           "options": {
             "stylelintConfig": ".stylelintrc",
             "reportFile": "dist/stylelint/report.xml",
@@ -1613,7 +1577,7 @@
           }
         },
         "lint-styles": {
-          "builder": "@dynatrace/barista-builders:stylelint",
+          "builder": "./dist/libs/workspace:stylelint",
           "options": {
             "stylelintConfig": ".stylelintrc",
             "reportFile": "dist/stylelint/report.xml",
@@ -1653,7 +1617,7 @@
           }
         },
         "lint-styles": {
-          "builder": "@dynatrace/barista-builders:stylelint",
+          "builder": "./dist/libs/workspace:stylelint",
           "options": {
             "stylelintConfig": ".stylelintrc",
             "reportFile": "dist/stylelint/report.xml",
@@ -1693,7 +1657,7 @@
           }
         },
         "lint-styles": {
-          "builder": "@dynatrace/barista-builders:stylelint",
+          "builder": "./dist/libs/workspace:stylelint",
           "options": {
             "stylelintConfig": ".stylelintrc",
             "reportFile": "dist/stylelint/report.xml",
@@ -1733,7 +1697,7 @@
           }
         },
         "lint-styles": {
-          "builder": "@dynatrace/barista-builders:stylelint",
+          "builder": "./dist/libs/workspace:stylelint",
           "options": {
             "stylelintConfig": ".stylelintrc",
             "reportFile": "dist/stylelint/report.xml",
@@ -1773,7 +1737,7 @@
           }
         },
         "lint-styles": {
-          "builder": "@dynatrace/barista-builders:stylelint",
+          "builder": "./dist/libs/workspace:stylelint",
           "options": {
             "stylelintConfig": ".stylelintrc",
             "reportFile": "dist/stylelint/report.xml",
@@ -1813,7 +1777,7 @@
           }
         },
         "lint-styles": {
-          "builder": "@dynatrace/barista-builders:stylelint",
+          "builder": "./dist/libs/workspace:stylelint",
           "options": {
             "stylelintConfig": ".stylelintrc",
             "reportFile": "dist/stylelint/report.xml",
@@ -1853,7 +1817,7 @@
           }
         },
         "lint-styles": {
-          "builder": "@dynatrace/barista-builders:stylelint",
+          "builder": "./dist/libs/workspace:stylelint",
           "options": {
             "stylelintConfig": ".stylelintrc",
             "reportFile": "dist/stylelint/report.xml",
@@ -1893,7 +1857,7 @@
           }
         },
         "lint-styles": {
-          "builder": "@dynatrace/barista-builders:stylelint",
+          "builder": "./dist/libs/workspace:stylelint",
           "options": {
             "stylelintConfig": ".stylelintrc",
             "reportFile": "dist/stylelint/report.xml",
@@ -1932,7 +1896,7 @@
           }
         },
         "lint-styles": {
-          "builder": "@dynatrace/barista-builders:stylelint",
+          "builder": "./dist/libs/workspace:stylelint",
           "options": {
             "stylelintConfig": ".stylelintrc",
             "reportFile": "dist/stylelint/report.xml",
@@ -1971,7 +1935,7 @@
           }
         },
         "lint-styles": {
-          "builder": "@dynatrace/barista-builders:stylelint",
+          "builder": "./dist/libs/workspace:stylelint",
           "options": {
             "stylelintConfig": ".stylelintrc",
             "reportFile": "dist/stylelint/report.xml",
@@ -2010,7 +1974,7 @@
           }
         },
         "lint-styles": {
-          "builder": "@dynatrace/barista-builders:stylelint",
+          "builder": "./dist/libs/workspace:stylelint",
           "options": {
             "stylelintConfig": ".stylelintrc",
             "reportFile": "dist/stylelint/report.xml",
@@ -2048,7 +2012,7 @@
           }
         },
         "lint-styles": {
-          "builder": "@dynatrace/barista-builders:stylelint",
+          "builder": "./dist/libs/workspace:stylelint",
           "options": {
             "stylelintConfig": ".stylelintrc",
             "reportFile": "dist/stylelint/report.xml",
@@ -2079,7 +2043,7 @@
           }
         },
         "lint-styles": {
-          "builder": "@dynatrace/barista-builders:stylelint",
+          "builder": "./dist/libs/workspace:stylelint",
           "options": {
             "stylelintConfig": ".stylelintrc",
             "reportFile": "dist/stylelint/report.xml",
@@ -2118,7 +2082,7 @@
           }
         },
         "lint-styles": {
-          "builder": "@dynatrace/barista-builders:stylelint",
+          "builder": "./dist/libs/workspace:stylelint",
           "options": {
             "stylelintConfig": ".stylelintrc",
             "reportFile": "dist/stylelint/report.xml",
@@ -2157,7 +2121,7 @@
           }
         },
         "lint-styles": {
-          "builder": "@dynatrace/barista-builders:stylelint",
+          "builder": "./dist/libs/workspace:stylelint",
           "options": {
             "stylelintConfig": ".stylelintrc",
             "reportFile": "dist/stylelint/report.xml",
@@ -2196,7 +2160,7 @@
           }
         },
         "lint-styles": {
-          "builder": "@dynatrace/barista-builders:stylelint",
+          "builder": "./dist/libs/workspace:stylelint",
           "options": {
             "stylelintConfig": ".stylelintrc",
             "reportFile": "dist/stylelint/report.xml",
@@ -2236,7 +2200,7 @@
           }
         },
         "lint-styles": {
-          "builder": "@dynatrace/barista-builders:stylelint",
+          "builder": "./dist/libs/workspace:stylelint",
           "options": {
             "stylelintConfig": ".stylelintrc",
             "reportFile": "dist/stylelint/report.xml",
@@ -2275,7 +2239,7 @@
           }
         },
         "lint-styles": {
-          "builder": "@dynatrace/barista-builders:stylelint",
+          "builder": "./dist/libs/workspace:stylelint",
           "options": {
             "stylelintConfig": ".stylelintrc",
             "reportFile": "dist/stylelint/report.xml",
@@ -2314,7 +2278,7 @@
           }
         },
         "lint-styles": {
-          "builder": "@dynatrace/barista-builders:stylelint",
+          "builder": "./dist/libs/workspace:stylelint",
           "options": {
             "stylelintConfig": ".stylelintrc",
             "reportFile": "dist/stylelint/report.xml",
@@ -2353,7 +2317,7 @@
           }
         },
         "lint-styles": {
-          "builder": "@dynatrace/barista-builders:stylelint",
+          "builder": "./dist/libs/workspace:stylelint",
           "options": {
             "stylelintConfig": ".stylelintrc",
             "reportFile": "dist/stylelint/report.xml",
@@ -2393,7 +2357,7 @@
           }
         },
         "lint-styles": {
-          "builder": "@dynatrace/barista-builders:stylelint",
+          "builder": "./dist/libs/workspace:stylelint",
           "options": {
             "stylelintConfig": ".stylelintrc",
             "reportFile": "dist/stylelint/report.xml",
@@ -2432,7 +2396,7 @@
           }
         },
         "lint-styles": {
-          "builder": "@dynatrace/barista-builders:stylelint",
+          "builder": "./dist/libs/workspace:stylelint",
           "options": {
             "stylelintConfig": ".stylelintrc",
             "reportFile": "dist/stylelint/report.xml",
@@ -2472,7 +2436,7 @@
           }
         },
         "lint-styles": {
-          "builder": "@dynatrace/barista-builders:stylelint",
+          "builder": "./dist/libs/workspace:stylelint",
           "options": {
             "stylelintConfig": ".stylelintrc",
             "reportFile": "dist/stylelint/report.xml",
@@ -2511,7 +2475,7 @@
           }
         },
         "lint-styles": {
-          "builder": "@dynatrace/barista-builders:stylelint",
+          "builder": "./dist/libs/workspace:stylelint",
           "options": {
             "stylelintConfig": ".stylelintrc",
             "reportFile": "dist/stylelint/report.xml",
@@ -2550,7 +2514,7 @@
           }
         },
         "lint-styles": {
-          "builder": "@dynatrace/barista-builders:stylelint",
+          "builder": "./dist/libs/workspace:stylelint",
           "options": {
             "stylelintConfig": ".stylelintrc",
             "reportFile": "dist/stylelint/report.xml",
@@ -2589,7 +2553,7 @@
           }
         },
         "lint-styles": {
-          "builder": "@dynatrace/barista-builders:stylelint",
+          "builder": "./dist/libs/workspace:stylelint",
           "options": {
             "stylelintConfig": ".stylelintrc",
             "reportFile": "dist/stylelint/report.xml",
@@ -2628,7 +2592,7 @@
           }
         },
         "lint-styles": {
-          "builder": "@dynatrace/barista-builders:stylelint",
+          "builder": "./dist/libs/workspace:stylelint",
           "options": {
             "stylelintConfig": ".stylelintrc",
             "reportFile": "dist/stylelint/report.xml",
@@ -2667,7 +2631,7 @@
           }
         },
         "lint-styles": {
-          "builder": "@dynatrace/barista-builders:stylelint",
+          "builder": "./dist/libs/workspace:stylelint",
           "options": {
             "stylelintConfig": ".stylelintrc",
             "reportFile": "dist/stylelint/report.xml",
@@ -2706,7 +2670,7 @@
           }
         },
         "lint-styles": {
-          "builder": "@dynatrace/barista-builders:stylelint",
+          "builder": "./dist/libs/workspace:stylelint",
           "options": {
             "stylelintConfig": ".stylelintrc",
             "reportFile": "dist/stylelint/report.xml",
@@ -2731,7 +2695,7 @@
       "sourceRoot": "libs/barista-components/schematics/src",
       "architect": {
         "build": {
-          "builder": "@dynatrace/barista-builders:typescript",
+          "builder": "./dist/libs/workspace:typescript",
           "options": {
             "tsConfig": "libs/barista-components/schematics/tsconfig.lib.json",
             "outDir": "dist/libs/components/schematics"
@@ -2780,7 +2744,7 @@
           }
         },
         "lint-styles": {
-          "builder": "@dynatrace/barista-builders:stylelint",
+          "builder": "./dist/libs/workspace:stylelint",
           "options": {
             "stylelintConfig": ".stylelintrc",
             "reportFile": "dist/stylelint/report.xml",
@@ -2820,7 +2784,7 @@
           }
         },
         "lint-styles": {
-          "builder": "@dynatrace/barista-builders:stylelint",
+          "builder": "./dist/libs/workspace:stylelint",
           "options": {
             "stylelintConfig": ".stylelintrc",
             "reportFile": "dist/stylelint/report.xml",
@@ -2860,7 +2824,7 @@
           }
         },
         "lint-styles": {
-          "builder": "@dynatrace/barista-builders:stylelint",
+          "builder": "./dist/libs/workspace:stylelint",
           "options": {
             "stylelintConfig": ".stylelintrc",
             "reportFile": "dist/stylelint/report.xml",
@@ -2900,7 +2864,7 @@
           }
         },
         "lint-styles": {
-          "builder": "@dynatrace/barista-builders:stylelint",
+          "builder": "./dist/libs/workspace:stylelint",
           "options": {
             "stylelintConfig": ".stylelintrc",
             "reportFile": "dist/stylelint/report.xml",
@@ -2940,7 +2904,7 @@
           }
         },
         "lint-styles": {
-          "builder": "@dynatrace/barista-builders:stylelint",
+          "builder": "./dist/libs/workspace:stylelint",
           "options": {
             "stylelintConfig": ".stylelintrc",
             "reportFile": "dist/stylelint/report.xml",
@@ -2980,7 +2944,7 @@
           }
         },
         "lint-styles": {
-          "builder": "@dynatrace/barista-builders:stylelint",
+          "builder": "./dist/libs/workspace:stylelint",
           "options": {
             "stylelintConfig": ".stylelintrc",
             "reportFile": "dist/stylelint/report.xml",
@@ -3020,7 +2984,7 @@
           }
         },
         "lint-styles": {
-          "builder": "@dynatrace/barista-builders:stylelint",
+          "builder": "./dist/libs/workspace:stylelint",
           "options": {
             "stylelintConfig": ".stylelintrc",
             "reportFile": "dist/stylelint/report.xml",
@@ -3057,7 +3021,7 @@
           }
         },
         "lint-styles": {
-          "builder": "@dynatrace/barista-builders:stylelint",
+          "builder": "./dist/libs/workspace:stylelint",
           "options": {
             "stylelintConfig": ".stylelintrc",
             "reportFile": "dist/stylelint/report.xml",
@@ -3097,7 +3061,7 @@
           }
         },
         "lint-styles": {
-          "builder": "@dynatrace/barista-builders:stylelint",
+          "builder": "./dist/libs/workspace:stylelint",
           "options": {
             "stylelintConfig": ".stylelintrc",
             "reportFile": "dist/stylelint/report.xml",
@@ -3137,7 +3101,7 @@
           }
         },
         "lint-styles": {
-          "builder": "@dynatrace/barista-builders:stylelint",
+          "builder": "./dist/libs/workspace:stylelint",
           "options": {
             "stylelintConfig": ".stylelintrc",
             "reportFile": "dist/stylelint/report.xml",
@@ -3177,7 +3141,7 @@
           }
         },
         "lint-styles": {
-          "builder": "@dynatrace/barista-builders:stylelint",
+          "builder": "./dist/libs/workspace:stylelint",
           "options": {
             "stylelintConfig": ".stylelintrc",
             "reportFile": "dist/stylelint/report.xml",
@@ -3217,7 +3181,7 @@
           }
         },
         "lint-styles": {
-          "builder": "@dynatrace/barista-builders:stylelint",
+          "builder": "./dist/libs/workspace:stylelint",
           "options": {
             "stylelintConfig": ".stylelintrc",
             "reportFile": "dist/stylelint/report.xml",
@@ -3257,7 +3221,7 @@
           }
         },
         "lint-styles": {
-          "builder": "@dynatrace/barista-builders:stylelint",
+          "builder": "./dist/libs/workspace:stylelint",
           "options": {
             "stylelintConfig": ".stylelintrc",
             "reportFile": "dist/stylelint/report.xml",
@@ -3297,7 +3261,7 @@
           }
         },
         "lint-styles": {
-          "builder": "@dynatrace/barista-builders:stylelint",
+          "builder": "./dist/libs/workspace:stylelint",
           "options": {
             "stylelintConfig": ".stylelintrc",
             "reportFile": "dist/stylelint/report.xml",
@@ -3337,7 +3301,7 @@
           }
         },
         "lint-styles": {
-          "builder": "@dynatrace/barista-builders:stylelint",
+          "builder": "./dist/libs/workspace:stylelint",
           "options": {
             "stylelintConfig": ".stylelintrc",
             "reportFile": "dist/stylelint/report.xml",

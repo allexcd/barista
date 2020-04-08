@@ -8,8 +8,6 @@ COPY .npmrc ./
 
 RUN rm -rf entrypoint.sh && \
     npm install @dynatrace/barista-icons @dynatrace/barista-fonts && \
-    cp -R ./dist/tmp/workspace ./node_modules/@dynatrace/workspace && \
-    cp -R ./dist/tmp/barista-builders ./node_modules/@dynatrace/barista-builders && \
     rm -rf .npmrc
 
 FROM ${BASE_IMAGE_REGISTRY}/library/jenkins-slave-cluster-docker-image:5.2 as builder

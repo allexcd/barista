@@ -79,6 +79,14 @@
           {
             "sourceTag": "scope:examples",
             "onlyDependOnLibsWithTags": ["scope:components"]
+          },
+          {
+            "sourceTag": "type:tooling",
+            "onlyDependOnLibsWithTags": [
+              "type:tooling",
+              "type:shared",
+              "type:types"
+            ]
           }
         ]
       }

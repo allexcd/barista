@@ -77,7 +77,7 @@ pipeline {
         stage("Prepare Workspace") {
           steps {
             sh'''
-              files="node_modules package-lock.sha1"
+              files="node_modules dist package-lock.sha1"
 
               for file in $files
               do
