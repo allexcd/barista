@@ -21,6 +21,7 @@ import {
   ViewChild,
   Inject,
   PLATFORM_ID,
+  OnInit,
 } from '@angular/core';
 
 import { DtSwitchChange } from '@dynatrace/barista-components/switch';
@@ -62,6 +63,8 @@ export class BaIconColorWheel {
   /** @internal */
   @ViewChild('colorwheel', { static: true }) _colorWheel: ElementRef;
 
+  @ViewChild('symbol', { static: false }) _symbol: ElementRef;
+
   /** @internal whether the background of the preview circle is dark */
   _previewCircleColorIsDark = false;
   /** @internal unique id of the icon */
@@ -81,6 +84,7 @@ export class BaIconColorWheel {
     @Inject(PLATFORM_ID) private platformId: Object,
   ) {
     this.isBrowser = isPlatformBrowser(this.platformId);
+    console.log(this._colorWheel);
     const groupedBlobs = Object.keys(DtColors)
       /** breaking-change Can eb removed when flat_white is removed from the color list. 7.0.0 */
       .filter(key => key !== 'FLAT_WHITE') // no flat white for the color wheel
