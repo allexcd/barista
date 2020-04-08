@@ -21,7 +21,6 @@ export function clamp(v: number, min: number = 0, max: number = 100): number {
 
 /**
  * Rounding to a specific number of decimal spaces.
- * TODO: Temporary, because a better solution is needed to avoid rounding issues.
  */
 export function roundToDecimal(toRound: number, decimals: number = 5): number {
   return (

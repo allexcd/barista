@@ -4,8 +4,9 @@
 <div class="dt-slider-flex-container">
   <div
     #trackWrapper
-    tabindex="{{disabled ? -1 : 0}}"
     class="dt-slider-wrapper"
+    [attr.tabIndex]="(disabled ? '' : 0)"
+    [attr.disabled]="disabled"
     [class.dt-disabled]="disabled"
     [attr.aria-valuenow]="value"
     [attr.aria-valuemin]="min"
@@ -30,6 +31,6 @@
     pattern="\d+\.?\d*"
     [disabled]="disabled"
     [attr.aria-labelledby]="_labelUid"
-    (change)="inputValueChanged($event)"
+    (change)="_inputValueChanged($event)"
   /><ng-content select="dt-slider-unit"></ng-content>
 </div>

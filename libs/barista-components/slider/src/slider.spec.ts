@@ -61,7 +61,13 @@ describe('DtSlider', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [DtSliderModule],
-      declarations: [TestApp, TestBindingApp, TestBigApp, TestDefaultSliderApp],
+      declarations: [
+        TestApp,
+        TestBindingApp,
+        TestBigApp,
+        TestDefaultSliderApp,
+        TestListenerSliderApp,
+      ],
       providers: [],
     });
 
@@ -197,7 +203,7 @@ describe('DtSlider', () => {
       expect(sliderBackground.style.transform).toBe('scale3d(1, 1, 1)');
     });
 
-    it('should update slider position in case the min is changed', () => {
+    it('should update slider position in case the value and max is changed', () => {
       testComponent.slider.value = 5;
       testComponent.slider.max = 5;
       const {
@@ -502,7 +508,7 @@ describe('DtSlider', () => {
 
       expect(sliderWrapper.classList.contains('dt-disabled')).toBe(true);
       expect(sliderWrapper.getAttribute('aria-disabled')).toBe('true');
-      expect(sliderWrapper.getAttribute('tabindex')).toBe('-1');
+      expect(sliderWrapper.getAttribute('tabindex')).toBe('');
       expect(update).not.toHaveBeenCalled();
       expect(testComponent.slider.value).toBe(1);
       expect(inputField.value).toBe('1');
@@ -733,8 +739,84 @@ describe('DtSlider', () => {
       expect(sliderBackground.style.transform).toBe('scale3d(0.5, 1, 1)');
       expect(sliderWrapper.classList.contains('dt-disabled')).toBe(true);
       expect(sliderWrapper.getAttribute('aria-disabled')).toBe('true');
-      expect(sliderWrapper.getAttribute('tabindex')).toBe('-1');
+      expect(sliderWrapper.getAttribute('tabindex')).toBe('');
       expect(inputField.getAttribute('disabled')).not.toBeNull();
+    });
+  });
+
+  describe('Slider with listener', () => {
+    let fixture;
+    let testComponent: TestListenerSliderApp;
+    let spy;
+
+    beforeEach(() => {
+      fixture = TestBed.createComponent(TestListenerSliderApp);
+      testComponent = fixture.componentInstance;
+      spy = jest.spyOn(testComponent, 'handleChange');
+
+      const el: HTMLElement = fixture.debugElement.query(
+        By.css('.dt-slider-wrapper'),
+      ).nativeElement;
+
+      jest.spyOn(el, 'getBoundingClientRect').mockReturnValue({
+        bottom: 100,
+        height: 100,
+        left: 0,
+        right: 100,
+        top: 0,
+        width: 100,
+        x: 0,
+        y: 0,
+        toJSON: () => '',
+      });
+
+      fixture.detectChanges();
+    });
+
+    it('should trigger change event if value changed (slider value)', () => {
+      expect(spy).toHaveBeenCalledTimes(1); //initial value setting
+
+      testComponent.slider.value = 2;
+      expect(spy).toHaveBeenCalledTimes(2);
+    });
+
+    it('should trigger change event if value changed (value binding)', () => {
+      expect(spy).toHaveBeenCalledTimes(1); //initial value setting
+
+      testComponent.value = 2;
+      fixture.detectChanges();
+      expect(spy).toHaveBeenCalledTimes(2);
+    });
+
+    it('should trigger change event if value changed (input field)', () => {
+      expect(spy).toHaveBeenCalledTimes(1); //initial value setting
+
+      const { inputField } = getElements(fixture);
+
+      inputField.value = 2;
+      inputField.dispatchEvent(new Event('change'));
+
+      expect(spy).toHaveBeenCalledTimes(2);
+    });
+
+    it('should trigger change event if value changed (mouse event)', () => {
+      expect(spy).toHaveBeenCalledTimes(1); //initial value setting
+
+      const { sliderWrapper } = getElements(fixture);
+
+      dispatchMouseEvent(sliderWrapper, 'click', 50);
+
+      expect(spy).toHaveBeenCalledTimes(2);
+    });
+
+    it('should trigger change event if value changed (keyboard event)', () => {
+      expect(spy).toHaveBeenCalledTimes(1); //initial value setting
+
+      const { sliderWrapper } = getElements(fixture);
+
+      dispatchKeyboardEvent(sliderWrapper, 'keydown', RIGHT_ARROW);
+
+      expect(spy).toHaveBeenCalledTimes(2);
     });
   });
 });
@@ -799,4 +881,18 @@ class TestBigApp {
 class TestDefaultSliderApp {
   @ViewChild(DtSlider, { static: true })
   slider: DtSlider;
+}
+
+@Component({
+  selector: 'dt-listener-test-app',
+  template: `
+    <dt-slider [value]="value" (change)="handleChange($event)"></dt-slider>
+  `,
+})
+class TestListenerSliderApp {
+  value: number = 0;
+  @ViewChild(DtSlider, { static: true })
+  slider: DtSlider;
+
+  handleChange = function(): void {};
 }

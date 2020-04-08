@@ -1,8 +1,8 @@
 # Slider
 
 `DtSlider` is a component that mimics the native html range element. It also
-contains an input filed, that is used to display the current value of the slider
-itself, as well as providing as input for the slider. The component can have two
+contains an input field, that is used to display the current value of the slider
+itself, as well as providing an input for the value. The component can have two
 additional components in itself as labels. The first label is for the whole
 slider component and the second is for the unit of the slider value.
 
@@ -17,6 +17,12 @@ slider component and the second is for the unit of the slider value.
 | `min`      | `number`  | `0`     | The minimum value the slider can take.                  |
 | `max`      | `number`  | `10`    | The maximum value the slider can take.                  |
 | `step`     | `number`  | `1`     | The value of the minimum increment and decrement value. |
+
+## Outputs
+
+| Name     | Type                   | Description                                  |
+| -------- | ---------------------- | -------------------------------------------- |
+| `change` | `EventEmitter<number>` | Event emitted when the slider value changed. |
 
 ## Labels
 

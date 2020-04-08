@@ -30,6 +30,7 @@ fixture('Slider')
   });
 
 // TODO: implement proper tests here, this is just a dummy test to show e2e test works
+// issue link: https://github.com/dynatrace-oss/barista/issues/836
 test('slider', async (testController: TestController) => {
   await testController
     .expect(await sliderContainer.getAttribute('class'))

@@ -107,26 +107,6 @@ declare const window: any;
 })
 export class DtSlider implements AfterViewInit, OnDestroy, OnInit {
   /**
-   * Holds the value, the rounding is shifted with.
-   * Calculated based in the step, to avoid JS rounding problems.
-   */
-  private _roundShift: number = 0;
-
-  /** @internal Unique id for this input. */
-  _labelUid = `dt-slider-label-${uniqueId++}`;
-
-  /** Holds the value of the slider. */
-  private _value$ = new BehaviorSubject<number>(0);
-  /** Holds the description of the size of the slider. */
-  private _clientRect$: Observable<ClientRect>;
-  /** Observer that gets triggered if the slider is resized on the screen. */
-  private _resizeObserver$ = new Subject<void>();
-  /** Variable to hold the ResizeObserver */
-  private _observer: any;
-  /** Observer that gets triggered if the input field value is changed. */
-  private _inputFieldValue$ = new Subject<number>();
-
-  /**
    * Binding for the minimum value of the slider.
    */
   @Input()
@@ -134,11 +114,13 @@ export class DtSlider implements AfterViewInit, OnDestroy, OnInit {
     return this._min;
   }
   set min(min: number) {
-    this._min = coerceNumberProperty(min);
-    if (this._min > this._value) {
-      this._updateValue(this._min, true);
-    } else {
-      this._updateSliderPosition(this._value, this._min, this._max);
+    if (isDefined(min)) {
+      this._min = coerceNumberProperty(min);
+      if (this._min > this._value) {
+        this._updateValue(this._min, true);
+      } else {
+        this._updateSliderPosition(this._value, this._min, this._max);
+      }
     }
   }
   private _min: number = 0;
@@ -151,11 +133,13 @@ export class DtSlider implements AfterViewInit, OnDestroy, OnInit {
     return this._max;
   }
   set max(max: number) {
-    this._max = coerceNumberProperty(max);
-    if (this._max < this._value) {
-      this._updateValue(this._max, true);
-    } else {
-      this._updateSliderPosition(this._value, this._min, this._max);
+    if (isDefined(max)) {
+      this._max = coerceNumberProperty(max);
+      if (this._max < this._value) {
+        this._updateValue(this._max, true);
+      } else {
+        this._updateSliderPosition(this._value, this._min, this._max);
+      }
     }
   }
   private _max: number = 10;
@@ -190,8 +174,10 @@ export class DtSlider implements AfterViewInit, OnDestroy, OnInit {
     return this._isDisabled;
   }
   set disabled(disabled: boolean) {
-    this._isDisabled = coerceBooleanProperty(disabled);
-    this._changeDetectionRef.markForCheck();
+    if (isDefined(disabled)) {
+      this._isDisabled = coerceBooleanProperty(disabled);
+      this._changeDetectorRef.markForCheck();
+    }
   }
   private _isDisabled: boolean = false;
 
@@ -203,31 +189,11 @@ export class DtSlider implements AfterViewInit, OnDestroy, OnInit {
     return this._value;
   }
   set value(value: number) {
-    this._updateValue(coerceNumberProperty(value));
-  }
-  private _value: number = 0;
-
-  /** Updates the value if the update is triggered by the consumer. */
-  private _updateValue(value: number, userTriggered: boolean = true): void {
-    this._value = value;
-    // We only need to update if the update is coming from outside the component.
-    if (userTriggered) {
-      this._value$.next(roundToSnap(value, this.step, this._min, this._max));
+    if (isDefined(value)) {
+      this._updateValue(coerceNumberProperty(value));
     }
   }
-
-  /** Observer that completes on ngOnDestroy */
-  private _destroy$ = new Subject<void>();
-
-  /**
-   * Convert input string value to number and call
-   * roundToSnap takes care of snapping the values to the steps
-   */
-  inputValueChanged(event: Event): void {
-    this._inputFieldValue$.next(
-      +(event.currentTarget as HTMLInputElement).value,
-    );
-  }
+  private _value: number = 0;
 
   /** Provides event for value change */
   @Output() change = new EventEmitter<number>();
@@ -252,8 +218,29 @@ export class DtSlider implements AfterViewInit, OnDestroy, OnInit {
   @ViewChild(DtInput, { static: true })
   _sliderInput: DtInput;
 
+  /** @internal Unique id for this input. */
+  _labelUid = `dt-slider-label-${uniqueId++}`;
+
+  /**
+   * Holds the value, the rounding is shifted with.
+   * Calculated based in the step, to avoid JS rounding problems.
+   */
+  private _roundShift: number = 0;
+  /** Holds the value of the slider. */
+  private _value$ = new BehaviorSubject<number>(0);
+  /** Holds the description of the size of the slider. */
+  private _clientRect$: Observable<ClientRect>;
+  /** Observer that gets triggered if the slider is resized on the screen. */
+  private _resizeObserver$ = new Subject<void>();
+  /** Variable to hold the ResizeObserver */
+  private _observer: any;
+  /** Observer that gets triggered if the input field value is changed. */
+  private _inputFieldValue$ = new Subject<number>();
+  /** Observer that completes on ngOnDestroy */
+  private _destroy$ = new Subject<void>();
+
   constructor(
-    private _changeDetectionRef: ChangeDetectorRef,
+    private _changeDetectorRef: ChangeDetectorRef,
     private _zone: NgZone,
     private _platform: Platform,
   ) {}
@@ -292,12 +279,33 @@ export class DtSlider implements AfterViewInit, OnDestroy, OnInit {
     }
   }
 
+  /**
+   * @internal
+   * Convert input string value to number and call
+   * roundToSnap takes care of snapping the values to the steps
+   */
+  _inputValueChanged(event: Event): void {
+    this._inputFieldValue$.next(
+      +(event.currentTarget as HTMLInputElement).value,
+    );
+  }
+
+  /** Updates the value if the update is triggered by the consumer. */
+  private _updateValue(value: number, userTriggered: boolean = true): void {
+    this._value = value;
+    // We only need to update if the update is coming from outside the component.
+    if (userTriggered) {
+      this._value$.next(roundToSnap(value, this.step, this._min, this._max));
+    }
+  }
+
   /** Updates The slider based on the new value */
-  private _updateSlider(value: any): void {
+  private _updateSlider(value: number): void {
     this._updateInput(value);
     this._updateValue(value, false);
     this._updateSliderPosition(value, this._min, this._max);
-    this._changeDetectionRef.markForCheck();
+    this.change.emit(value);
+    this._changeDetectorRef.markForCheck();
   }
 
   /** Updates the input field with new value. */
@@ -413,7 +421,9 @@ export class DtSlider implements AfterViewInit, OnDestroy, OnInit {
         filter(() => !this._isDisabled),
         takeUntil(this._destroy$),
       )
-      .subscribe(value => this._zone.run(() => this._updateSlider(value)));
+      .subscribe(value => {
+        this._zone.run(() => this._updateSlider(value));
+      });
   }
 }
 
