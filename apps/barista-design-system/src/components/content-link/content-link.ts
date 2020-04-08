@@ -36,6 +36,8 @@ import { Subject } from 'rxjs';
   styles: ['a:hover { cursor: pointer; }'],
   host: {
     '[href]': 'contentLink',
+    '(click)':
+      'onClick($event.button, $event.ctrlKey, $event.metaKey, $event.shiftKey)',
   },
 })
 export class BaContentLink implements OnChanges, OnInit, OnDestroy {
@@ -76,12 +78,6 @@ export class BaContentLink implements OnChanges, OnInit, OnDestroy {
     this.destroy$.complete();
   }
 
-  @HostListener('click', [
-    '$event.button',
-    '$event.ctrlKey',
-    '$event.metaKey',
-    '$event.shiftKey',
-  ])
   onClick(
     button: number,
     ctrlKey: boolean,
@@ -93,7 +89,6 @@ export class BaContentLink implements OnChanges, OnInit, OnDestroy {
     if (button !== 0 || ctrlKey || metaKey || shiftKey) {
       return true;
     }
-
     this._router.navigate([this.contentLink], {
       fragment: this.fragment,
       queryParams: this.queryParams,
