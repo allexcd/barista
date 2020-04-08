@@ -26,6 +26,11 @@ executors:
     docker:
       - image: circleci/node:12
 
+
+  barista:
+    working_directory: /dynatrace
+    docker:
+      - image: designops/workspace-base:test-1
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #
 #   P A T T E R N S:
@@ -60,53 +65,43 @@ sha_branch_cache: &sha_branch_cache
 
 set_env: &set_env
   name: Setup Environment Variables
-  command: |
-    BASE_URL="https://api.github.com/repos/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}"
-    MASTER_SHA_FILE=./.config/last-${CIRCLE_BRANCH}-sha.txt
-
-    # if we have a pull request then fetch the base sha to run against
-    if [[ $CIRCLE_PULL_REQUEST ]];
-    then
-      printf "Fetching Base Commit from GitHub for the pull request: %s" "$CIRCLE_PULL_REQUEST"
-
-      # Get the last number of the pull request number with grep
-      PR_NUMBER=$(echo "$CIRCLE_PULL_REQUEST" | grep -Eo '[0-9]+$')
-      PR_URL="${BASE_URL}/pulls/${PR_NUMBER}"
-      CIRCLE_PR_BASE_SHA=$(curl -s "${PR_URL}" | jq -r '.base.sha')
-
-      # Add the affected args to the bash environment file
-      printf "export AFFECTED_ARGS=\"--base=%s\"\n" "$CIRCLE_PR_BASE_SHA" >> $BASH_ENV
-
-      # Regex checks for master, 4.x or 4.15.x branch
-    elif [[ "$CIRCLE_BRANCH" =~ ^([0-9]{1,}\.x|[0-9]{1,}\.[0-9]{1,}\.x|master)$ ]];
-    then
-
-      echo "Fetching Base Commit from Deploy Cache"
-
-      if [[ ! -f "$MASTER_SHA_FILE" ]];
-      then
-
-        # If config dir does not exist create it
-        if [[ ! -d ./.config ]];
-        then
-          mkdir ./.config
-        fi
-
-        echo "Write SHA to $MASTER_SHA_FILE"
-        git rev-parse HEAD~1 > "$MASTER_SHA_FILE"
-      fi
-
-      # Add the affected args to the bash environment file
-      printf "export AFFECTED_ARGS=\"--base=%s\"\n" "$(cat "$MASTER_SHA_FILE")" >> $BASH_ENV
-    else
-      echo "Compare any other commit against orign/master"
-      # Add the affected args to the bash environment file
-      printf "export AFFECTED_ARGS=\"--base=origin/master\"\n" >> $BASH_ENV
-    fi
+  command:  node dist/libs/workspace/src/scripts/affected-args.js
 
 
-    source $BASH_ENV
-    echo "Affected ARGS: $AFFECTED_ARGS"
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+#
+#   C O M M A N D S:
+#   ------------------------------------------------------------------------
+#   Commands that can be used in jobs
+#
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+
+commands:
+  prepare_job:
+    description: >-
+      To be written
+    steps:
+      - run: ls -lah /dynatrace
+      - run: touch "/dynatrace/temp-${CIRCLE_BUILD_NUM}"
+      # - attach_workspace:
+      #     at: ~/barista
+      # - run:
+      #     name: Setup Environment Variables
+      #     command:  node dist/libs/workspace/src/scripts/affected-args.js
+      # - run: printenv
+
+  skip_for_forked_pull_requests:
+    description: >-
+      If this build is from a fork, stop executing the current job and return success.
+      This is needed to avoid steps that will fail due to missing credentials.
+    steps:
+      - run:
+          name: Early return if this build is from a forked PR
+          command: |
+            if [ -n "$CIRCLE_PR_NUMBER" ]; then
+              echo "Skip job on forked PR."
+              circleci step halt
+            fi
 
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
@@ -183,13 +178,10 @@ jobs:
 
 # - check formatting if all files are formatted with prettier
   check-formatting:
-    <<: *defaults
+    executor: barista
     steps:
-      - attach_workspace:
-          at: ~/barista
-      - run:
-          <<: *set_env
-      - run: yarn format:check ${AFFECTED_ARGS}
+      - prepare_job
+      # - run: yarn format:check ${AFFECTED_ARGS}
 
 # - static codeanalysis of the files
   lint:
@@ -354,67 +346,65 @@ workflows:
 # - Runs on every PR check
   pr-check:
     jobs:
-      - install:
-          <<: *filter_branches
+      # - install:
+      #     <<: *filter_branches
       - check-formatting:
           <<: *filter_branches
-          requires:
-            - install
-      - sonar:
-          <<: *filter_branches
-          # SONAR_TOKEN is needed for sonar cloud checks
-          context: barista
-          requires:
-            - install
-      - security-checks:
-          <<: *filter_branches
-          # SNYK_TOKEN is needed for security checking
-          context: barista
-          requires:
-            - install
-      - lint:
-          <<: *filter_branches
-          requires:
-            - install
-      - lint-styles:
-          <<: *filter_branches
-          requires:
-            - install
-      - unit-test:
-          <<: *filter_branches
-          context: barista
-          requires:
-            - install
-      - e2e-test:
-          <<: *filter_branches
-          # BROWSERSTACK_ACCESS_KEY is needed for browserstack automation
-          # BROWSERSTACK_USERNAME is needed for browserstack automation
-          context: barista
-          requires:
-            - build
-      - a11y:
-          <<: *filter_branches
-          requires:
-            - build
-      - build:
-          <<: *filter_branches
-          requires:
-            - install
-      - store-build-artifacts:
-          filters:
-            branches:
-              only: /^([0-9]{1,}\.x|[0-9]{1,}\.[0-9]{1,}\.x|master)$/
-          requires:
-            - build
-      - save-latest:
-          filters:
-            branches:
-              only: /^([0-9]{1,}\.x|[0-9]{1,}\.[0-9]{1,}\.x|master)$/
-          requires:
-            - check-formatting
-            - sonar
-            - security-checks
-            - lint
-            - lint-styles
-            - unit-test
-            - e2e-test
+      # - sonar:
+      #     <<: *filter_branches
+      #     # SONAR_TOKEN is needed for sonar cloud checks
+      #     context: barista
+      #     requires:
+      #       - install
+      # - security-checks:
+      #     <<: *filter_branches
+      #     # SNYK_TOKEN is needed for security checking
+      #     context: barista
+      #     requires:
+      #       - install
+      # - lint:
+      #     <<: *filter_branches
+      #     requires:
+      #       - install
+      # - lint-styles:
+      #     <<: *filter_branches
+      #     requires:
+      #       - install
+      # - unit-test:
+      #     <<: *filter_branches
+      #     context: barista
+      #     requires:
+      #       - install
+      # - e2e-test:
+      #     <<: *filter_branches
+      #     # BROWSERSTACK_ACCESS_KEY is needed for browserstack automation
+      #     # BROWSERSTACK_USERNAME is needed for browserstack automation
+      #     context: barista
+      #     requires:
+      #       - build
+      # - a11y:
+      #     <<: *filter_branches
+      #     requires:
+      #       - build
+      # - build:
+      #     <<: *filter_branches
+      #     requires:
+      #       - install
+      # - store-build-artifacts:
+      #     filters:
+      #       branches:
+      #         only: /^([0-9]{1,}\.x|[0-9]{1,}\.[0-9]{1,}\.x|master)$/
+      #     requires:
+      #       - build
+      # - save-latest:
+      #     filters:
+      #       branches:
+      #         only: /^([0-9]{1,}\.x|[0-9]{1,}\.[0-9]{1,}\.x|master)$/
+      #     requires:
+      #       - check-formatting
+      #       - sonar
+      #       - security-checks
+      #       - lint
+      #       - lint-styles
+      #       - unit-test
+      #       - e2e-test
