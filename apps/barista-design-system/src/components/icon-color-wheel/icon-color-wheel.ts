@@ -14,11 +14,19 @@
  * limitations under the License.
  */
 
-import { Component, ElementRef, Input, ViewChild } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  Input,
+  ViewChild,
+  Inject,
+  PLATFORM_ID,
+} from '@angular/core';
 
 import { DtSwitchChange } from '@dynatrace/barista-components/switch';
 import { DtColors } from '@dynatrace/barista-components/theming';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { isPlatformBrowser } from '@angular/common';
 
 interface BaColorWheelBlob {
   colorName: string;
@@ -62,11 +70,17 @@ export class BaIconColorWheel {
   _iconFillColor = DtColors.GRAY_700;
   /** @internal all colored circle blobs */
   _coloredBlobs: BaColorWheelBlob[];
+  /** @internal whether context is in browser */
+  isBrowser: boolean;
 
   /** whether the icon should be downloaded as png */
   private _convertToPng = false;
 
-  constructor(private _sanitizer: DomSanitizer) {
+  constructor(
+    private _sanitizer: DomSanitizer,
+    @Inject(PLATFORM_ID) private platformId: Object,
+  ) {
+    this.isBrowser = isPlatformBrowser(this.platformId);
     const groupedBlobs = Object.keys(DtColors)
       /** breaking-change Can eb removed when flat_white is removed from the color list. 7.0.0 */
       .filter(key => key !== 'FLAT_WHITE') // no flat white for the color wheel
