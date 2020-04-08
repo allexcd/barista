@@ -206,6 +206,7 @@ describe('Barista transformers', () => {
         <a href="/patterns/button-alignment?sort-order=ASC">Resource</a>
         <a href="/components/button?sort=ASC#headline1">Resource</a>
         <a href="/patterns/button-alignment?sort=ASC&id=2">Resource</a>
+        <a href="../">Back</a>
       `;
       const transformed = await relativeUrlTransformer({
         title: 'Links',
@@ -228,6 +229,7 @@ describe('Barista transformers', () => {
         <a contentLink="/patterns/button-alignment" queryParams="{sort-order: ASC}">Resource</a>
         <a contentLink="/components/button" fragment="headline1" queryParams="{sort: ASC}">Resource</a>
         <a contentLink="/patterns/button-alignment" queryParams="{sort: ASC,id: 2}">Resource</a>
+        <a contentLink="../">Back</a>
       `,
       );
     });

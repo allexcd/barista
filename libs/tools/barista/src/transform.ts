@@ -211,7 +211,7 @@ export const relativeUrlTransformer: BaPageTransformer = async source => {
       const links = $('a');
       links.each((_, link) => {
         const linkValue = $(link).attr('href');
-        if (linkValue && isQualifiedLink(linkValue)) {
+        if (linkValue && !isQualifiedLink(linkValue)) {
           let url = parse(linkValue);
           // Link Value
           $(link.attribs).append(
@@ -337,11 +337,13 @@ export function internalContentTransformerFactory(
   };
 }
 
-/** Checks whether a URL is relative  */
+/**
+ * Checks whether a URL is a fully qualified link
+ */
 function isQualifiedLink(href: string): boolean {
   // Matches every character case insensitive until a double point is coming. Has to have at least one character.
   // https://regex101.com/r/nzwuR4/1
-  return !href.match(/^(?:[a-z]+:)?\/\//i);
+  return !!href.match(/^(?:[a-z]+:)?\/\//i);
 }
 
 /** Converts query parameters to a json object */
