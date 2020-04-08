@@ -986,29 +986,6 @@
         }
       }
     },
-    "tools-shared": {
-      "root": "libs/tools/shared",
-      "sourceRoot": "libs/tools/shared/src",
-      "projectType": "library",
-      "architect": {
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": ["libs/tools/shared/tsconfig.json"],
-            "exclude": ["**/node_modules/**", "!tools/shared/**"]
-          }
-        },
-        "test": {
-          "builder": "@nrwl/jest:jest",
-          "options": {
-            "jestConfig": "libs/tools/shared/jest.config.js",
-            "tsConfig": "libs/tools/shared/tsconfig.spec.json",
-            "setupFile": "libs/tools/shared/src/test-setup.ts",
-            "passWithNoTests": true
-          }
-        }
-      }
-    },
     "linting": {
       "projectType": "library",
       "root": "libs/tools/linting",
@@ -3412,6 +3389,29 @@
           "options": {
             "jestConfig": "libs/testing/fixtures/jest.config.js",
             "tsConfig": "libs/testing/fixtures/tsconfig.spec.json",
+            "passWithNoTests": true
+          }
+        }
+      }
+    },
+    "shared-node": {
+      "root": "libs/shared/node",
+      "sourceRoot": "libs/shared/node/src",
+      "projectType": "library",
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": ["libs/shared/node/tsconfig.json"],
+            "exclude": ["**/node_modules/**", "!tools/shared/**"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/shared/node/jest.config.js",
+            "tsConfig": "libs/shared/node/tsconfig.spec.json",
+            "setupFile": "libs/shared/node/src/test-setup.ts",
             "passWithNoTests": true
           }
         }

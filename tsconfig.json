@@ -198,11 +198,11 @@
       "@dynatrace/testing/browser": ["libs/testing/browser/src/index.ts"],
       "@dynatrace/testing/fixtures": ["libs/testing/fixtures/src/index.ts"],
       "@dynatrace/tools/environments": ["libs/tools/environments/src/index.ts"],
-      "@dynatrace/tools/shared": ["libs/tools/shared/src/index.ts"],
       "@dynatrace/shared/barista-definitions": [
         "libs/shared/barista-definitions/src/index.ts"
       ],
-      "@environments/*": ["environments/*.ts"]
+      "@environments/*": ["environments/*.ts"],
+      "@dynatrace/shared/node": ["libs/shared/node/src/index.ts"]
     },
     "plugins": [
       {

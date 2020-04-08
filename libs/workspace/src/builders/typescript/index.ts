@@ -26,7 +26,7 @@ import { TypescriptBuilderOptions } from './schema';
 import { JsonObject } from '@angular-devkit/core';
 
 /**
- * This function is duplicated and located under @dynatrace/tools/shared
+ * This function is duplicated and located under @dynatrace/shared/node
  * TODO: lukas.holzer
  * Should be removed after: https://github.com/dynatrace-oss/barista/issues/414
  *

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { executeCommand } from '@dynatrace/tools/shared';
+import { executeCommand } from '@dynatrace/shared/node';
 
 /**
  * Unpacks a tar file

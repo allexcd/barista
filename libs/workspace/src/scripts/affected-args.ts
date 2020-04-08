@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { executeCommand } from '@dynatrace/tools/shared'
+import { executeCommand } from '@dynatrace/shared/node';
 import { appendFileSync } from 'fs';
 import { Octokit } from '@octokit/rest';
 
@@ -26,9 +26,6 @@ const {
   CIRCLE_PROJECT_REPONAME = 'barista',
   CIRCLE_PR_NUMBER, //= '663',
 } = process.env;
-
-
-
 
 // /**
 //  * @link https://regex101.com/r/Z3zGjA/1/
@@ -61,7 +58,7 @@ async function main(): Promise<string> {
     return pullRequest.data?.base?.sha || FALLBACK;
   }
 
-  executeCommand('ls -lah')
+  executeCommand('ls -lah');
   // if (BRANCH_REGEX.test(CIRCLE_BRANCH)) {
   //   if (CIRCLE_BRANCH === 'master') {
   //   } else {
