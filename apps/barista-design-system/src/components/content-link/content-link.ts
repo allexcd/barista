@@ -18,28 +18,29 @@ import {
   Component,
   Input,
   HostListener,
-  HostBinding,
   OnChanges,
   OnInit,
+  OnDestroy,
 } from '@angular/core';
 import { Router, Event, NavigationEnd } from '@angular/router';
+import { takeUntil } from 'rxjs/operators';
+import { Subject } from 'rxjs';
 
 /**
  * The ba-content link component is used because we need to dynamically
  * instanciate a router link and this is not possible, because it is a directive.
- * So we create a component that handles the navigation.
  */
 @Component({
   selector: 'a[contentLink]',
   template: '<ng-content></ng-content>',
+  styles: ['a:hover { cursor: pointer; }'],
+  host: {
+    '[href]': 'contentLink',
+  },
 })
-//TODO: Implement HTML sanitizer in on init for linkValue if <ng-content> doesn't work.
-export class BaContentLink implements OnChanges, OnInit {
+export class BaContentLink implements OnChanges, OnInit, OnDestroy {
   /** Absolute url for navigation on the page. For example /components/button */
   @Input() contentLink: string;
-
-  /** Href link to display */
-  @HostBinding() href: string;
 
   /** QueryParams of absolute url */
   @Input() queryParams: { [k: string]: string };
@@ -47,13 +48,19 @@ export class BaContentLink implements OnChanges, OnInit {
   /** Fragement of absolute url */
   @Input() fragment: string;
 
+  /** Href link to display */
+  href: string;
+
+  destroy$ = new Subject<void>();
+
   constructor(private _router: Router) {
-    //todo unsubscribe
-    this._router.events.subscribe((navigation: Event) => {
-      if (navigation instanceof NavigationEnd) {
-        this._updateTargetUrlAndHref();
-      }
-    });
+    this._router.events
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((navigation: Event) => {
+        if (navigation instanceof NavigationEnd) {
+          this._updateTargetUrlAndHref();
+        }
+      });
   }
 
   ngOnInit(): void {
@@ -62,6 +69,11 @@ export class BaContentLink implements OnChanges, OnInit {
 
   ngOnChanges(): void {
     this._updateTargetUrlAndHref();
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   @HostListener('click', [
@@ -76,6 +88,8 @@ export class BaContentLink implements OnChanges, OnInit {
     metaKey: boolean,
     shiftKey: boolean,
   ): boolean {
+    // Check if the click happens on a button or with some control keys pressed and let the
+    // click event bubble to let consumers or the browser handle the event.
     if (button !== 0 || ctrlKey || metaKey || shiftKey) {
       return true;
     }

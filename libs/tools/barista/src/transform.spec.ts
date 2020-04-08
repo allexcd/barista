@@ -190,7 +190,7 @@ describe('Barista transformers', () => {
   });
 
   describe('internalLinkReplacer', () => {
-    it('should replace internal links to routerLinks', async () => {
+    it('should replace not fully qualified links with content-link component', async () => {
       const content = `<a href="http://www.dynatrace.com">Dynatrace</a>
         <a href="ftpt://resources/guides">Resource</a>
         <a href="smtp://resources/guides">Resource</a>

@@ -209,40 +209,30 @@ export const relativeUrlTransformer: BaPageTransformer = async source => {
   if (source.content && source.content.length) {
     transformed.content = runWithCheerio(source.content, $ => {
       const links = $('a');
-      if (links.length) {
-        links.each((_, link) => {
-          const linkValue = $(link).attr('href');
-          if (linkValue && isRelativeUrl(linkValue)) {
-            let url = parse(linkValue);
-            // Link Value
-            if (url.pathname === null) {
-              $(link.attribs).append(
-                $(link)
-                  .removeAttr('href')
-                  .attr('contentLink', '/'),
-              );
-            } else {
-              $(link.attribs).append(
-                $(link)
-                  .removeAttr('href')
-                  .attr('contentLink', url.pathname),
-              );
-            }
-            // Fragment
-            if (url.hash) {
-              $(link.attribs).append(
-                $(link).attr('fragment', url.hash.replace('#', '')),
-              );
-            }
-            // QueryParam
-            if (url.query) {
-              $(link.attribs).append(
-                $(link).attr('queryParams', toQueryParamValue(url.query)),
-              );
-            }
+      links.each((_, link) => {
+        const linkValue = $(link).attr('href');
+        if (linkValue && isQualifiedLink(linkValue)) {
+          let url = parse(linkValue);
+          // Link Value
+          $(link.attribs).append(
+            $(link)
+              .removeAttr('href')
+              .attr('contentLink', url.pathname || '/'),
+          );
+          // Fragment
+          if (url.hash) {
+            $(link.attribs).append(
+              $(link).attr('fragment', url.hash.replace('#', '')),
+            );
           }
-        });
-      }
+          // QueryParam
+          if (url.query) {
+            $(link.attribs).append(
+              $(link).attr('queryParams', toQueryParamValue(url.query)),
+            );
+          }
+        }
+      });
     });
   }
   return transformed;
@@ -348,7 +338,7 @@ export function internalContentTransformerFactory(
 }
 
 /** Checks whether a URL is relative  */
-function isRelativeUrl(href: string): boolean {
+function isQualifiedLink(href: string): boolean {
   // Matches every character case insensitive until a double point is coming. Has to have at least one character.
   // https://regex101.com/r/nzwuR4/1
   return !href.match(/^(?:[a-z]+:)?\/\//i);
