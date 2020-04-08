@@ -14,6 +14,6 @@
  * limitations under the License.
  */
 
-export * from './utils';
-export * from './interfaces';
 export * from './circle-ci-api';
+export * from './circle-ci.interface';
+export * from './node-http-client';
