@@ -17,8 +17,8 @@ if [ ! "$(sha1sum -c package-lock.sha1)" ]; then
 
   # TODO: saving of the builders can be removed after #844 is merged
   # THen the builders arn't located in the node modules anymore
-  cp -R ./dist/tmp/workspace ./node_modules/@dynatrace/workspace && \
-  cp -R ./dist/tmp/barista-builders ./node_modules/@dynatrace/barista-builders && \
+  cp -R ./dist/tmp/workspace ./node_modules/@dynatrace/workspace
+  cp -R ./dist/tmp/barista-builders ./node_modules/@dynatrace/barista-builders
 fi
 
 # Run the command from the docker image
